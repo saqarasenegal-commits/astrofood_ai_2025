@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AstroFood – Chef-AI Intelligent 🧠🍽️</title>
+    <style>
+      :root {
+        --gold: #fbbf24;
+        --bg: radial-gradient(circle at top, #0f172a, #020617 65%);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: #fff;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        min-height: 100vh;
+      }
+      header {
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(251, 191, 36, 0.25);
+      }
+      main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        padding: 1.5rem;
+      }
+      .card {
+        background: rgba(2, 6, 23, 0.55);
+        border: 1px solid rgba(251, 191, 36, 0.12);
+        border-radius: 1rem;
+        padding: 1rem;
+      }
+      textarea, select, button {
+        width: 100%;
+        border-radius: 0.6rem;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(15, 23, 42, 0.6);
+        color: #fff;
+        padding: 0.6rem 0.7rem;
+        margin-bottom: 0.5rem;
+      }
+      button {
+        background: linear-gradient(120deg, #fbbf24, #f59e0b);
+        color: #020617;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      #ai-output { white-space: pre-wrap; }
+      @media (max-width: 960px) {
+        main { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>AstroFood – Chef-AI Intelligent</h1>
+      <p style="opacity:0.7;font-size:0.8rem">Connecté au backend</p>
+    </header>
+    <main>
+      <div class="card">
+        <h2>🗣️ Chat AstroFood</h2>
+        <textarea id="chat-input" rows="4" placeholder="Ex : Donne-moi un menu pour un Lion…"></textarea>
+        <button id="btn-chat">Envoyer</button>
+      </div>
+      <div class="card">
+        <h2>🪐 Recette par signe</h2>
+        <select id="sign">
+          <option>Bélier</option><option>Taureau</option><option>Gémeaux</option>
+          <option>Cancer</option><option>Lion</option><option>Vierge</option>
+          <option>Balance</option><option>Scorpion</option><option>Sagittaire</option>
+          <option>Capricorne</option><option>Verseau</option><option>Poissons</option>
+        </select>
+        <select id="lang">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+          <option value="ar">العربية</option>
+        </select>
+        <button id="btn-recipe">Générer</button>
+      </div>
+      <div class="card" style="grid-column:1/-1">
+        <h2>📄 Réponse AI</h2>
+        <div id="ai-output">Lance un test 👆</div>
+      </div>
+    </main>
+    <script>
+      // on mettra le vrai domaine Vercel ici après import
+      const API_URL = "/api/astrofood-ai";
+
+      const out = document.getElementById("ai-output");
+
+      document.getElementById("btn-chat").addEventListener("click", async () => {
+        const message = document.getElementById("chat-input").value.trim();
+        out.textContent = "⏳ Chef-AI réfléchit...";
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mode: "chat", message })
+        });
+        const data = await res.json();
+        out.textContent = data.text || JSON.stringify(data, null, 2);
+      });
+
+      document.getElementById("btn-recipe").addEventListener("click", async () => {
+        const sign = document.getElementById("sign").value;
+        const lang = document.getElementById("lang").value;
+        out.textContent = "🍳 Génération de la recette...";
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mode: "recipe", sign, lang })
+        });
+        const data = await res.json();
+        out.textContent = data.text || JSON.stringify(data, null, 2);
+      });
+    </script>
+  </body>
+</html>
