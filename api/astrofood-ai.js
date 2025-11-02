@@ -1,3 +1,4 @@
+
 export default async function handler(req, res) {
   // CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -14,16 +15,19 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Use POST" });
   }
 
-  // 🔴 ICI on est en Node → on lit req.body (pas req.json())
+  // On lit le body (Node)
   const body = req.body || {};
   const sign = body.sign || "Poissons";
   const lang = body.lang || "fr";
 
-  const text = `✅ API ASTROFOOD OK (Node)
+  // 🟣 ICI on reste en mode démo (pas OpenAI, pas de 504)
+  const reply = `✅ API ASTROFOOD OK (Node)
 Signe: ${sign}
 Langue: ${lang}
-Recette démo: jus de bouye énergisant + tartine mil & miel.`;
+Recette démo:
+- Jus de bouye énergisant
+- Tartine mil & miel
+- Option : poisson grillé au citron pour ${sign}`;
 
-  return res.status(200).json({ ok: true, text });
+  return res.status(200).json({ ok: true, text: reply });
 }
-
