@@ -98,9 +98,7 @@
       <button class="btn" id="btn-recipe" style="margin-top:.7rem">🍳 <span data-i18n-fr="Générer" data-i18n-en="Generate" data-i18n-ar="إنشاء">Générer</span></button>
       <div id="ai-output" class="ai-out">Prêt.</div>
       <div style="margin-top:.6rem">
-         <a class="btn" id="open-digital-card" href="/card.html" target="_blank" rel="noopener">
-  📇 Afficher la carte digitale
-</a>
+      <a class="btn" id="open-digital-card" href="#">📇 Afficher la carte digitale</a>
 
       </div>
     </section>
@@ -180,6 +178,20 @@
       }catch(e){
         out.textContent = "❌ Erreur front : "+e.message;
       }  
+      
+    document.getElementById('open-digital-card').addEventListener('click', () => {
+      // Exemple : récupérer les données déjà présentes dans la page principale
+      const sign = document.getElementById('sign')?.value || 'Lion';
+      const recipe = document.getElementById('recipe-name')?.innerText || 'Poulet Yassa Sénégalais';
+
+      // Construire une URL avec les paramètres
+      const url = `/card.html?sign=${encodeURIComponent(sign)}&recipe=${encodeURIComponent(recipe)}`;
+      window.open(url, '_blank');
+    });
+  </script>
+</body>
+</html>
+
     });
   </script>
 </body>
