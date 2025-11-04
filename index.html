@@ -78,8 +78,8 @@
       <h2 style="color:var(--gold)" data-i18n-fr="Assistant Chef-AI" data-i18n-en="Chef-AI Assistant" data-i18n-ar="مساعد الشيف-AI">Assistant Chef-AI</h2>
       <div class="grid2">
         <div>
-          <label data-i18n-fr="Votre signe" data-i18n-en="Your sign" data-i18n-ar="برجك"></label>
-          <select id="sign">
+        <label data-i18n-fr="Votre signe" data-i18n-en="Your sign" data-i18n-ar="برجك"></label> 
+        <select id="sign">
             <option>Bélier</option><option>Taureau</option><option>Gémeaux</option>
             <option>Cancer</option><option>Lion</option><option>Vierge</option>
             <option>Balance</option><option>Scorpion</option><option>Sagittaire</option>
@@ -87,25 +87,24 @@
           </select>
         </div>
         <div>
-          <label data-i18n-fr="Langue" data-i18n-en="Language" data-i18n-ar="اللغة"></label>
-          <select id="lang">
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-            <option value="ar">العربية</option>
-            <div>
-  <label>Objectif / État</label>
-  <select id="state">
-    <option value="detox">Détox</option>
-    <option value="energy_boost">Booster énergie</option>
-    <option value="stress_relief">Anti-stress</option>
-    <option value="immunity">Immunité</option>
-    <option value="digestion">Digestion</option>
-    <option value="metabolic_balance">balance metabolique</option>
-  </select>
-</div>
-
-          </select>
-        </div>
+        <label data-i18n-fr="Langue" data-i18n-en="Language" data-i18n-ar="اللغة"></label>
+         <select id="lang">
+           <option value="fr">Français</option>
+           <option value="en">English</option>
+           <option value="ar">العربية</option>
+          <div>
+         <label>Objectif / État</label>
+          <select id="state">
+            <option value="detox">Détox</option>
+            <option value="energy_boost">Booster énergie</option>
+            <option value="stress_relief">Anti-stress</option>
+            <option value="immunity">Immunité</option>
+            <option value="digestion">Digestion</option>
+            <option value="metabolic_balance">balance metabolique</option>
+     </select>
+    </div>
+     </select>
+      </div>
       </div>
       <button class="btn" id="btn-recipe" style="margin-top:.7rem">🍳 <span data-i18n-fr="Générer" data-i18n-en="Generate" data-i18n-ar="إنشاء">Générer</span></button>
       <div id="ai-output" class="ai-out">Prêt.</div>
@@ -190,7 +189,8 @@
     document.getElementById("btn-recipe").addEventListener("click", async ()=>{
       const sign = document.getElementById("sign").value;
       const lang = document.getElementById("lang").value;
-       const state = document.getElementById("state").value;|| "detox"; //        
+      const state = document.getElementById("state").value;|| "detox";
+
        const element = elementFromSign(sign); 
       
       out.textContent = "🍳 Génération…";
