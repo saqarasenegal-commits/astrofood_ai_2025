@@ -163,7 +163,7 @@
         document.documentElement.lang = lang==='en'?'en':'fr';
         document.body.dir='ltr';
         document.body.style.fontFamily="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
-      }
+      } 
     }
     document.querySelectorAll('.lang-btn').forEach(b=>{
       b.addEventListener('click',()=>{
@@ -185,12 +185,12 @@
   if (["gémeaux","gemeaux","balance","verseau"].some(x=>s.includes(x))) return "Air";
   if (["cancer","scorpion","poissons"].some(x=>s.includes(x))) return "Eau";
   return "—";
-}
-
+      
+ }
     document.getElementById("btn-recipe").addEventListener("click", async ()=>{
       const sign = document.getElementById("sign").value;
       const lang = document.getElementById("lang").value;
-       const state = document.getElementById("state").value;        
+       const state = document.getElementById("state").value;|| "detox"; //        
        const element = elementFromSign(sign); 
       
       out.textContent = "🍳 Génération…";
