@@ -197,38 +197,70 @@
     
   // --- Lecture automatique des paramètres de l'URL ---
 <script>
-  function renderCard(data) {
-    const $card = document.getElementById("digital-card");
-    if (!$card || !data) return;
+  const params = new URLSearchParams(window.location.search);
+  const sign = params.get('sign');
+  const recipe = params.get('recipe');
 
-    $card.querySelector(".dc-title") && ($card.querySelector(".dc-title").textContent = data.title || "Recette");
-    $card.querySelector(".dc-desc") && ($card.querySelector(".dc-desc").textContent = data.description || "");
-
-    const $ing = $card.querySelector(".dc-ingredients");
-    if ($ing) $ing.innerHTML = (data.ingredients || []).map(i => `<li>${i}</li>`).join("");
-
-    const $steps = $card.querySelector(".dc-steps");
-    if ($steps) $steps.innerHTML = (data.steps || []).map(s => `<li>${s}</li>`).join("");
-
-    $card.querySelector(".dc-sign") && ($card.querySelector(".dc-sign").textContent = (data.sign || "").toUpperCase());
-    $card.querySelector(".dc-lang") && ($card.querySelector(".dc-lang").textContent = (data.lang || "").toUpperCase());
-
-    const $img = $card.querySelector(".dc-img");
-    if ($img && data.image) $img.src = data.image;
+  // Exemple d’insertion dynamique dans la carte :
+  if (recipe) {
+    const titleEl = document.querySelector('.title');
+    if (titleEl) titleEl.textContent = recipe;
   }
 
-  // Lecture initiale du cache
-  try {
-    const cached = localStorage.getItem("astro:lastRecipe");
-    if (cached) renderCard(JSON.parse(cached));
-  } catch(e) { console.warn("Aucune recette trouvée dans le cache"); }
+  if (sign) {
+    const tagEl = document.querySelector('.tag');
+    if (tagEl) tagEl.textContent = `🌙 Signe conseillé : ${sign}`;
+  } 
+    function _afPayload(){
+      const title = document.querySelector('.title')?.innerText?.trim() || 'Recette';
+      // Accepte <li> dans #steps ou bien le 2e div d’un .step (compat)
+      const steps =
+        Array.from(document.querySelectorAll('#steps li')).map(li => li.innerText.trim());
+      if (steps.length === 0) {
+        document.querySelectorAll('#steps .step div:nth-child(2)').forEach(s => {
+          const t = s.innerText?.trim(); if (t) steps.push(t);
+        });
+      }
+      const ingredients = Array.from(document.querySelectorAll('#ingredients li'))
+        .map(li => li.innerText.trim());
 
-  // Mise à jour automatique si nouvelle recette depuis index.html
-  window.addEventListener("storage", (e) => {
-    if (e.key === "astro:lastRecipe" && e.newValue) {
-      renderCard(JSON.parse(e.newValue));
+      return { title, ingredients, steps };
     }
-  });
-</script>
+
+    async function _afGenPhoto(){
+      const btn = document.getElementById('btn-ai-photo');
+      const img = document.querySelector('.photo');
+      if(!btn || !img){ alert("Bouton ou image .photo introuvable."); return; }
+
+      const old = btn.textContent;
+      btn.textContent = '⏳ Génération...';
+      btn.style.pointerEvents = 'none';
+
+      try{
+        const r = await fetch('/api/chef-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(_afPayload())
+        });
+        const data = await r.json();
+        if(!r.ok || !data?.image) throw new Error(data?.error || ('HTTP '+r.status));
+        // data.image = "data:image/png;base64,..." OU URL publique
+        img.src = data.image;
+        btn.textContent = '✅ Photo générée';
+      }catch(e){
+        console.error(e);
+        alert('Chef-AI: ' + e.message);
+        btn.textContent = old;
+      }finally{
+        btn.style.pointerEvents = '';
+        setTimeout(()=> (btn.textContent = '🎨 Générer photo AI'), 2000);
+      }
+    }
+
+    document.getElementById('btn-ai-photo')?.addEventListener('click', (ev)=>{
+      ev.preventDefault();
+      _afGenPhoto();
+    });
+  </script>
 </body>
 </html>
