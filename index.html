@@ -36,16 +36,16 @@
     footer{opacity:.7;text-align:center;padding:1rem;font-size:.85rem}
     @media (max-width:960px){.hero{grid-template-columns:1fr}.grid2,.grid3{grid-template-columns:1fr}}
   </style>
-</head>
-<body>
-  <header>
-    <div class="brand">
+ </head>
+   <body>
+    <header>
+     <div class="brand">
       <div class="logo">AF</div>
       <div>
         <div class="title" data-i18n-fr="AstroFood Premium Gold" data-i18n-en="AstroFood Premium Gold" data-i18n-ar="أستروفود بريميوم جولد">AstroFood Premium Gold</div>
         <div class="muted" data-i18n-fr="Recettes IA par signe" data-i18n-en="AI recipes by zodiac" data-i18n-ar="وصفات بالذكاء الاصطناعي حسب الأبراج">Recettes IA par signe</div>
       </div>
-    </div>
+    
     <div class="langs">
       <button class="lang-btn active" data-lang="fr">FR</button>
       <button class="lang-btn" data-lang="en">EN</button>
@@ -53,10 +53,10 @@
     </div>
   </header>
 
-  <main>
+    <main>
     <!-- HERO -->
-    <section class="hero card">
-      <div>
+     <section class="hero card">
+       <div>
         <h1 data-i18n-fr="Cuisine guidée par les astres" data-i18n-en="Cooking guided by the stars" data-i18n-ar="مطبخك وفق حركة الكواكب">Cuisine guidée par les astres</h1>
         <p class="muted" data-i18n-fr="Choisis ton signe et ta langue : l’IA propose 3 repas + boissons + carte téléchargeable." data-i18n-en="Choose your sign & language: AI suggests 3 meals + drinks + a downloadable card." data-i18n-ar="اختر برجك ولغتك: الذكاء الاصطناعي يقترح 3 وجبات + مشروبات + بطاقة قابلة للتنزيل.">Choisis ton signe et ta langue : l’IA propose 3 repas + boissons + carte téléchargeable.</p>
         <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem">
@@ -84,7 +84,6 @@
             <option value="daily3" selected>3 repas / jour</option>
           </select>
         </div>
-
         <div>
         <label data-i18n-fr="Votre signe" data-i18n-en="Your sign" data-i18n-ar="برجك"></label> 
         <select id="sign">
@@ -111,9 +110,8 @@
     <option value="immunity">Immunité</option>
     <option value="digestion">Digestion</option>
     <option value="metabolic_balance">Balance métabolique</option>
-  </select>
-</div>
-        
+   </select>
+  </div>   
       <button class="btn" id="btn-recipe" style="margin-top:.7rem">🍳 <span data-i18n-fr="Générer" data-i18n-en="Generate" data-i18n-ar="إنشاء">Générer</span></button>
       <div id="ai-output" class="ai-out">Prêt.</div>
       <div style="margin-top:.6rem">
