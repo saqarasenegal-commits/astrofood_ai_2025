@@ -190,12 +190,18 @@
     document.getElementById("btn-recipe").addEventListener("click", async ()=>{
       const sign = document.getElementById("sign").value;
       const lang = document.getElementById("lang").value;
+       const state = document.getElementById("state").value;        
+       const element = elementFromSign(sign); 
+      
       out.textContent = "🍳 Génération…";
       try{
         const r = await fetch(API_URL, {
           method:"POST",
           headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({ sign, lang, mode:"recipe" })
+          body: JSON.stringify({ sign, lang, mode:"recipe",
+                 goal: state,            
+                 element    
+            })
         });
         const data = await r.json();
 
@@ -205,6 +211,8 @@
         // ----- 🔗 PATCH de synchronisation (carte digitale)
         const recipe = {
           sign, lang,
+           goal: state,           // 👈 on stocke l’objectif
+           element,  
           title: data.title || data.recipe?.title || "Recette",
           description: data.description || data.recipe?.description || (data.text ?? ""),
           ingredients: data.ingredients || data.recipe?.ingredients || [],
