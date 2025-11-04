@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modèle – Carte Digitale Recette | AstroFood Premium Gold</title>
+  <meta name="description" content="Modèle prêt à remplir pour carte digitale de recette – Premium Gold (photo, ingrédients, préparation, cuisson, calories)." />
+  <style>
+    :root{
+      --gold:#FBBF24;
+      --amber:#f59e0b;
+      --ink:#e5e7eb;
+      --bg: radial-gradient(circle at top, #0f172a, #020617 65%);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+    .page{max-width:900px;margin:18px auto;padding:16px}
+    .card{
+      background:rgba(2,6,23,.55);
+      border:1px solid rgba(251,191,36,.22);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    header.hero{
+      display:grid;grid-template-columns:1.2fr 1fr;gap:0;
+      background:linear-gradient(120deg, rgba(251,191,36,.08), rgba(2,6,23,.35));
+      border-bottom:1px solid rgba(251,191,36,.18);
+    }
+    .photo{
+      aspect-ratio: 16/10;
+      width:100%;height:100%;
+      object-fit:cover;
+      display:block;
+      background:#0b1220;
+    }
+    .meta{
+      padding:16px;
+      display:flex;flex-direction:column;justify-content:center;gap:.6rem
+    }
+    .brand{
+      display:flex;align-items:center;gap:.6rem;
+    }
+    .logo{
+      width:46px;height:46px;border-radius:12px;
+      background:linear-gradient(120deg,var(--gold),var(--amber));
+      display:grid;place-items:center;
+      color:#111;font-weight:900;
+      box-shadow:0 0 0 3px rgba(251,191,36,.18);
+    }
+    .legend{color:var(--gold);font-weight:800;letter-spacing:.05em}
+    h1.title{margin:.2rem 0 0 0;font-size:1.6rem}
+    .tags{display:flex;gap:.5rem;flex-wrap:wrap}
+    .tag{font-size:.8rem;padding:.25rem .5rem;border:1px solid rgba(251,191,36,.25);border-radius:.5rem;color:#fff;background:rgba(251,191,36,.08)}
+    .kpis{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;opacity:.95}
+    .kpi{border:1px dashed rgba(251,191,36,.25);border-radius:.5rem;padding:.35rem .6rem}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}
+    .block{background:rgba(2,6,23,.45);border:1px solid rgba(251,191,36,.14);border-radius:12px;padding:14px}
+    .block h2{margin:.2rem 0 .6rem 0;color:var(--gold);font-size:1.05rem}
+    ul.ingredients{margin:.2rem 0 .2rem 1.2rem}
+    .steps{display:grid;gap:.6rem}
+    .step{display:grid;grid-template-columns:auto 1fr;gap:.6rem;align-items:start}
+    .step .idx{width:28px;height:28px;border-radius:7px;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);display:grid;place-items:center;color:var(--gold);font-weight:700}
+    .note{opacity:.8;font-size:.92rem}
+    .nutri{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem}
+    .pill{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.22);border-radius:10px;padding:.5rem;text-align:center}
+    .footer{
+      display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      padding:10px 14px;border-top:1px solid rgba(251,191,36,.18);background:rgba(2,6,23,.35)
+    }
+    .qr-wrap{display:flex;align-items:center;gap:.8rem}
+    .qr{background:#fff;border-radius:.6rem;display:grid;place-items:center;width:110px;height:110px}
+    .small{font-size:.86rem;opacity:.85}
+    .btns{display:flex;gap:.5rem;flex-wrap:wrap}
+    .btn{padding:.45rem .8rem;border-radius:.55rem;border:1px solid rgba(251,191,36,.45);color:var(--gold);text-decoration:none;display:inline-flex;align-items:center;gap:.4rem}
+    .btn:hover{background:rgba(251,191,36,.08)}
+    .print{cursor:pointer}
+    @media (max-width:960px){
+      header.hero{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+      .qr{width:90px;height:90px}
+    }
+    /* Print A4 */
+    @page{size:A4;margin:14mm}
+    @media print{
+      body{background:#fff}
+      .page{margin:0;padding:0}
+      .btns,.print{display:none!important}
+      .card{box-shadow:none;border-color:#ccc}
+      .legend{color:#000}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+     <main class="astrofood-gold">
+      <header class="hero">
+        <!-- PHOTO RECETTE -->
+       <img class="photo" src="./assets/recette.jpg" alt="Photo de la recette" />
+
+        <!-- META -->
+        <div class="meta">
+          <div class="brand">
+            <div class="logo">AF</div>
+            <div class="legend">ASTROFOOD PREMIUM GOLD • v16</div>
+          </div>
+            <h1 class="title">Poulet Yassa Sénégalais</h1>
+          <div class="tags">
+            <span class="tag" contenteditable="true">🌙 Signe conseillé : Lion</span>
+            <span class="tag" contenteditable="true">🔥 Mode : Four</span>
+            <span class="tag" contenteditable="true">⏱️ Total : 55 min</span>
+            <span class="tag" contenteditable="true">🍽️ 4 portions</span>
+          </div>
+          <div class="kpis">
+            <div class="kpi" contenteditable="true">Préparation : 15 min</div>
+            <div class="kpi" contenteditable="true">Cuisson : 40 min</div>
+            <div class="kpi" contenteditable="true">Difficulté : Facile</div>
+            <div class="kpi" contenteditable="true">Calories : ~ 520 kcal/portion</div>
+          </div>
+           <div class="actions">
+            <a class="btn" href="#" onclick="window.print();return false;">🖨️ Imprimer en PDF</a>
+            <a class="btn" href="#" onclick="exportJSON();return false;">💾 Exporter JSON</a>
+             <a class="btn" id="btn-ai-photo" href="#">🎨 Générer photo AI</a>
+              <span class="small">💡 Astuce : cliquez sur un texte pour modifier (mode éditable).</span> 
+          </div>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="col">
+          <h2>🧪 Ingrédients</h2>
+          <ul id="ingredients">
+            <li>1,2 kg de poulet (cuisses/haut de cuisse)</li>
+            <li>5 gros oignons émincés</li>
+            <li>2 citrons (jus)</li>
+            <li>2 c. s. de moutarde</li>
+            <li>2 c. s. d’huile (arachide/olive)</li>
+            <li>2 gousses d’ail, sel, poivre</li>
+            <li>1 piment (facultatif)</li>
+          </ul>
+        </div>
+
+        <div class="col">
+          <h2>👨‍🍳 Mode de préparation</h2>
+           <ul id="steps">
+           <li>Mariner le poulet avec le jus de citron, la moutarde, l’ail et le piment rouge</li>
+          <li>Dorer le poulet à la poêle ou au four très chaud</li>
+          <li>Préparer la sauce avec les oignons émincés, faire fondre les oignons, ajouter la marinade, compoter doucement</li>
+          <li>Cuire poulet + oignons en cocotte ou au four à 190°C pendant 35–40 minutes</li>
+          <li>Cuire le riz dans l’eau salée avec un peu d’huile (absorption ou vapeur)</li>
+          <li>Préparer la sauce oignons avec moutarde et jus de cuisson, mijoter 10 min</li>
+          <li>Ajouter le riz et l’eau, porter à ébullition, puis réduire le feu et laisser mijoter</li>
+          <li>Servir le poulet nappé de sauce avec le riz blanc</li>
+          </ul>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>🔥 Mode & temps de cuisson</h2>
+          <p class="note" contenteditable="true">
+            Four statique 190 °C · 35–40 min (ou cocotte feu moyen 30–35 min). 
+            Terminer 5 min en grill pour caraméliser légèrement les oignons.
+          </p>
+        </div>
+
+        <div class="block">
+          <h2>⚖️ Calories & infos</h2>
+          <div class="nutri">
+            <div class="pill" contenteditable="true">Énergie ~ 520 kcal</div>
+            <div class="pill" contenteditable="true">Protéines ~ 36 g</div>
+            <div class="pill" contenteditable="true">Glucides ~ 46 g</div>
+            <div class="pill" contenteditable="true">Lipides ~ 18 g</div>
+          </div>
+          <p class="note" contenteditable="true" style="margin-top:.5rem">Estimation indicative – adapter selon les portions et garnitures.</p>
+        </div>
+      </section>
+
+      <div class="footer">
+        <div class="qr-wrap">
+          <div class="qr">
+            <!-- QR WhatsApp (modifie le numéro ci-dessous) -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://wa.me/221786599051" width="110" height="110" alt="QR WhatsApp">
+          </div>
+          <div>
+            <div class="legend">ASTROFOOD PREMIUM GOLD • v16</div>
+            <div class="small">WhatsApp : +221 78 659 90 51 • Instagram : @astrofood</div>
+          </div>
+        </div>
+        <div class="small">© AstroFood — Carte digitale prête à imprimer</div>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- ========= SCRIPT MINIMAL : APPELLE /api/chef-image ET REMPLACE <img.photo> ========= -->
+  <script>
+    function _afPayload(){
+      const title = document.querySelector('.title')?.innerText?.trim() || 'Recette';
+      // Accepte <li> dans #steps ou bien le 2e div d’un .step (compat)
+      const steps =
+        Array.from(document.querySelectorAll('#steps li')).map(li => li.innerText.trim());
+      if (steps.length === 0) {
+        document.querySelectorAll('#steps .step div:nth-child(2)').forEach(s => {
+          const t = s.innerText?.trim(); if (t) steps.push(t);
+        });
+      }
+      const ingredients = Array.from(document.querySelectorAll('#ingredients li'))
+        .map(li => li.innerText.trim());
+
+      return { title, ingredients, steps };
+    }
+
+    async function _afGenPhoto(){
+      const btn = document.getElementById('btn-ai-photo');
+      const img = document.querySelector('.photo');
+      if(!btn || !img){ alert("Bouton ou image .photo introuvable."); return; }
+
+      const old = btn.textContent;
+      btn.textContent = '⏳ Génération...';
+      btn.style.pointerEvents = 'none';
+
+      try{
+        const r = await fetch('/api/chef-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(_afPayload())
+        });
+        const data = await r.json();
+        if(!r.ok || !data?.image) throw new Error(data?.error || ('HTTP '+r.status));
+        // data.image = "data:image/png;base64,..." OU URL publique
+        img.src = data.image;
+        btn.textContent = '✅ Photo générée';
+      }catch(e){
+        console.error(e);
+        alert('Chef-AI: ' + e.message);
+        btn.textContent = old;
+      }finally{
+        btn.style.pointerEvents = '';
+        setTimeout(()=> (btn.textContent = '🎨 Générer photo AI'), 2000);
+      }
+    }
+
+    document.getElementById('btn-ai-photo')?.addEventListener('click', (ev)=>{
+      ev.preventDefault();
+      _afGenPhoto();
+    });
+  </script>
+</body>
+</html>
