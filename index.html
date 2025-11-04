@@ -191,7 +191,7 @@
     document.getElementById("btn-recipe").addEventListener("click", async ()=>{
       const sign = document.getElementById("sign").value;
       const lang = document.getElementById("lang").value;
-      const state = document.getElementById("state").value;|| "detox";
+      const state = document.getElementById("state")?.value || "detox";
 
        const element = elementFromSign(sign); 
       
