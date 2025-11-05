@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AstroFood Premium Gold — Index (Dark Astral)</title>
+  <title>AstroFood Premium Gold — Index (Dark Astral v16.5)</title>
   <meta name="theme-color" content="#0f172a" />
   <style>
     :root{
@@ -53,8 +53,8 @@
     .hero h3{margin:.2rem 0 .35rem; color:var(--gold)}
     .hero p{margin:0; color:var(--muted)}
 
-    .work{display:grid; grid-template-columns: 1fr 420px; gap:1rem; padding:1rem}
-    @media (max-width: 1200px){ .work{grid-template-columns:1fr} }
+    .work{display:grid; grid-template-columns: 1fr 460px; gap:1rem; padding:1rem}
+    @media (max-width: 1220px){ .work{grid-template-columns:1fr} }
 
     .output{min-height:280px; padding:1rem; border:1px dashed var(--border); border-radius:12px; background:rgba(2,6,23,.45)}
     .output h4{margin:.25rem 0 .5rem}
@@ -62,11 +62,25 @@
     .tool{padding:.5rem .7rem; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); color:var(--text); cursor:pointer}
     .tool:active{transform:translateY(1px)}
 
+    /* Preview right panel with tabs */
     .preview{padding:0; overflow:hidden}
     .preview-head{display:flex; align-items:center; justify-content:space-between; padding:.75rem 1rem; border-bottom:1px solid var(--border)}
-    .preview iframe{width:100%; height:420px; border:0; display:block; background:#0b1220}
+    .tabs{display:flex; gap:.4rem}
+    .tab{padding:.4rem .6rem; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); cursor:pointer}
+    .tab[aria-selected="true"]{background:#0b1220}
+    .pane{display:none}
+    .pane.active{display:block}
+    .pane iframe{width:100%; height:420px; border:0; display:block; background:#0b1220}
 
-    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.75rem; border:1px solid var(--border); border-bottom-width:3px; padding:.08rem .35rem; border-radius:6px; background:var(--surface-2)}
+    /* Coach */
+    .coach{padding:1rem}
+    .coach h4{margin:.2rem 0 .6rem}
+    .pill{display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--border); background:var(--surface-2); padding:.35rem .6rem; border-radius:10px; margin:.15rem .25rem .15rem 0}
+    .list{margin:.4rem 0 .2rem; padding-left:1.1rem}
+    .step{border:1px dashed var(--border); border-radius:10px; padding:.6rem .7rem; margin:.5rem 0}
+    .step .row{display:flex; align-items:center; justify-content:space-between; gap:.5rem}
+    .timer{font-family:ui-monospace,Menlo,Consolas,monospace; padding:.15rem .4rem; border:1px solid var(--border); border-radius:8px}
+    .tiny{font-size:.82rem; color:var(--muted)}
   </style>
 </head>
 <body>
@@ -74,7 +88,7 @@
     <div class="brand"><span class="dot"></span><h1>AstroFood Premium Gold</h1></div>
     <div class="actions">
       <span class="badge">Dark Astral</span>
-      <span class="badge">v16.4</span>
+      <span class="badge">v16.5</span>
     </div>
   </header>
 
@@ -148,16 +162,47 @@
           <div class="toolbar">
             <button class="tool" id="copy-html">Copier HTML</button>
             <button class="tool" id="clear-output">Effacer</button>
+            <button class="tool" id="ping-api">Tester l’API</button>
           </div>
           <div id="ai-output" class="output">Prêt.</div>
         </div>
 
         <div class="panel preview">
           <div class="preview-head">
-            <div style="opacity:.8" id="preview-title">Aperçu de la carte (ouvrir dans un onglet)</div>
+            <div class="tabs" role="tablist" aria-label="Preview tabs">
+              <button class="tab" id="tab-card" role="tab" aria-selected="true" aria-controls="pane-card">🪪 Carte</button>
+              <button class="tab" id="tab-coach" role="tab" aria-selected="false" aria-controls="pane-coach">👨‍🍳 Coach‑AI</button>
+            </div>
             <div class="hint" id="preview-hint">Raccourcis : <span class="kbd">Ctrl</span>+<span class="kbd">Entrée</span> pour générer</div>
           </div>
-          <iframe id="preview" title="Aperçu carte" srcdoc="<html><body style='margin:0;background:#0b1220;color:#94a3b8;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100%'>Cliquez ‘Ouvrir la carte digitale’</body></html>"></iframe>
+          <div id="pane-card" class="pane active"><iframe id="preview" title="Aperçu carte" srcdoc="<html><body style='margin:0;background:#0b1220;color:#94a3b8;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100%'>Cliquez ‘Ouvrir la carte digitale’</body></html>"></iframe></div>
+          <div id="pane-coach" class="pane">
+            <div class="coach" id="coach">
+              <h4>Coach‑AI</h4>
+              <div class="row" style="margin-bottom:.6rem">
+                <button class="tool" id="btn-advice">🧠 <span data-i18n-coach="advice_btn">Conseil nutritionnel</span></button>
+                <div style="display:flex; gap:.4rem; width:100%">
+                  <select id="african-product" style="flex:1" title="Produit africain">
+                    <option value="">— Produit africain (au choix) —</option>
+                    <option value="mil">Mil</option>
+                    <option value="fonio">Fonio</option>
+                    <option value="manioc">Manioc</option>
+                    <option value="patate_douce">Patate douce</option>
+                    <option value="niébé">Niébé (haricot)</option>
+                    <option value="gombo">Gombo</option>
+                    <option value="bissap">Bissap</option>
+                    <option value="bouye">Bouye (pain de singe)</option>
+                    <option value="arachide">Arachide</option>
+                    <option value="thiof">Thiof (mérou)</option>
+                  </select>
+                  <button class="tool" id="btn-gen-from-product">👩‍🍳 <span data-i18n-coach="gen_from">Générer recette</span></button>
+                </div>
+              </div>
+              <div id="coach-output"></div>
+              <p class="tiny">Génère une recette d’abord pour activer minuteries et liste de courses. Les conseils et la génération par produit fonctionnent sans recette préalable.</p>
+            </div>
+          </div>
+          </div>
         </div>
       </div>
     </section>
@@ -166,146 +211,141 @@
   <script>
   (() => {
     if (window.__ASTROFOOD_INIT__) return; window.__ASTROFOOD_INIT__ = true;
-    const TEST_MODE = false; // mettre true pour démo locale
+    const TEST_MODE = false; let LAST_ERROR=null; let LAST_RECIPE=null; let TIMERS={};
 
     const $ = s => document.querySelector(s);
-    const lang = $('#lang');
-    const sign = $('#sign');
-    const state = $('#state');
-    const plan = $('#plan');
-    const out = $('#ai-output');
-    const btn = $('#btn-recipe');
-    const openCard = $('#open-digital-card');
+    const lang = $('#lang'); const sign = $('#sign'); const state = $('#state'); const plan = $('#plan');
+    const out = $('#ai-output'); const btn = $('#btn-recipe'); const openCard = $('#open-digital-card');
 
     // i18n labels
     const I18N = {
-      fr: {
-        controls: 'Contrôles', lang: 'Langue', hintLang: 'Astuce : L pour basculer rapidement.',
-        sign: 'Votre signe', state: 'Objectif / État', plan: 'Plan de repas',
-        generate: 'Générer', card: 'Ouvrir la carte digitale', hintCard: "La carte s'ouvre dans un nouvel onglet.",
-        heroTitle: 'Assistant Chef‑AI', heroDesc: 'Générez des recettes et plans 3 repas adaptés à votre signe et votre objectif.',
-        generating: '🍳 Génération…', error: '❌ Erreur de génération',
-        previewTitle: 'Aperçu de la carte (ouvrir dans un onglet)', previewHint: 'Raccourcis : Ctrl+Entrée pour générer'
-      },
-      en: {
-        controls: 'Controls', lang: 'Language', hintLang: 'Tip: press L to switch quickly.',
-        sign: 'Your sign', state: 'Goal / State', plan: 'Meal plan',
-        generate: 'Generate', card: 'Open digital card', hintCard: 'The card opens in a new tab.',
-        heroTitle: 'Chef‑AI Assistant', heroDesc: 'Generate recipes and 3‑meal plans tailored to your sign and goal.',
-        generating: '🍳 Generating…', error: '❌ Generation error',
-        previewTitle: 'Card preview (open in a new tab)', previewHint: 'Shortcuts: Ctrl+Enter to generate'
-      },
-      ar: {
-        controls: 'التحكم', lang: 'اللغة', hintLang: 'نصيحة: اضغط L للتبديل بسرعة.',
-        sign: 'برجك', state: 'الهدف / الحالة', plan: 'خطة الوجبات',
-        generate: 'إنشاء', card: 'فتح البطاقة الرقمية', hintCard: 'تفتح البطاقة في علامة تبويب جديدة.',
-        heroTitle: 'مساعد الشيف‑AI', heroDesc: 'أنشئ وصفات وخطط ٣ وجبات حسب برجك وهدفك.',
-        generating: '🍳 جاري الإنشاء…', error: '❌ خطأ في الإنشاء',
-        previewTitle: 'معاينة البطاقة (افتح في علامة تبويب)', previewHint: 'اختصار: Ctrl+Enter للإنشاء'
-      }
+      fr: {controls:'Contrôles', lang:'Langue', hintLang:'Astuce : L pour basculer rapidement.', sign:'Votre signe', state:'Objectif / État', plan:'Plan de repas', generate:'Générer', card:'Ouvrir la carte digitale', hintCard:"La carte s'ouvre dans un nouvel onglet.", heroTitle:'Assistant Chef‑AI', heroDesc:'Générez des recettes et plans 3 repas adaptés à votre signe et votre objectif.', generating:'🍳 Génération…', error:'❌ Erreur de génération', previewHint:'Raccourcis : Ctrl+Entrée pour générer', coachTitle:'Coach‑AI', shopping:'Liste de courses', subs:'Substitutions', steps:'Étapes', start:'Démarrer', stop:'Arrêter', timer:'Minuteur' },
+      en: {controls:'Controls', lang:'Language', hintLang:'Tip: press L to switch quickly.', sign:'Your sign', state:'Goal / State', plan:'Meal plan', generate:'Generate', card:'Open digital card', hintCard:'The card opens in a new tab.', heroTitle:'Chef‑AI Assistant', heroDesc:'Generate recipes and 3‑meal plans tailored to your sign and goal.', generating:'🍳 Generating…', error:'❌ Generation error', previewHint:'Shortcuts: Ctrl+Enter to generate', coachTitle:'AI Coach', shopping:'Shopping list', subs:'Substitutions', steps:'Steps', start:'Start', stop:'Stop', timer:'Timer' },
+      ar: {controls:'التحكم', lang:'اللغة', hintLang:'نصيحة: اضغط L للتبديل بسرعة.', sign:'برجك', state:'الهدف / الحالة', plan:'خطة الوجبات', generate:'إنشاء', card:'فتح البطاقة الرقمية', hintCard:'تفتح البطاقة في علامة تبويب جديدة.', heroTitle:'مساعد الشيف‑AI', heroDesc:'أنشئ وصفات وخطط ٣ وجبات حسب برجك وهدفك.', generating:'🍳 جاري الإنشاء…', error:'❌ خطأ في الإنشاء', previewHint:'اختصار: Ctrl+Enter للإنشاء', coachTitle:'مدرّب الذكاء الاصطناعي', shopping:'قائمة التسوّق', subs:'البدائل', steps:'الخطوات', start:'ابدأ', stop:'أوقف', timer:'مؤقّت' }
     };
 
     function applyI18N(code){
       const t = I18N[code] || I18N.fr;
-      $('#lbl-controls').textContent = t.controls;
-      $('#lbl-lang').textContent = t.lang; $('#hint-lang').textContent = t.hintLang;
+      $('#lbl-controls').textContent = t.controls; $('#lbl-lang').textContent = t.lang; $('#hint-lang').textContent = t.hintLang;
       $('#lbl-sign').textContent = t.sign; $('#lbl-state').textContent = t.state; $('#lbl-plan').textContent = t.plan;
-      $('#btn-generate-label').textContent = t.generate;
-      $('#btn-card-label').textContent = t.card; $('#hint-card').textContent = t.hintCard;
-      $('#hero-title').textContent = t.heroTitle; $('#hero-desc').textContent = t.heroDesc;
-      $('#preview-title').textContent = t.previewTitle; $('#preview-hint').textContent = t.previewHint;
-      document.documentElement.lang = code; document.documentElement.dir = (code === 'ar') ? 'rtl' : 'ltr';
+      $('#btn-generate-label').textContent = t.generate; $('#btn-card-label').textContent = t.card; $('#hint-card').textContent = t.hintCard;
+      $('#hero-title').textContent = t.heroTitle; $('#hero-desc').textContent = t.heroDesc; $('#preview-hint').textContent = t.previewHint;
+      document.getElementById('tab-coach').textContent = (code==='ar'?'👨‍🍳 '+I18N.ar.coachTitle: '👨‍🍳 '+t.coachTitle);
+      document.documentElement.lang = code; document.documentElement.dir = (code==='ar')?'rtl':'ltr';
     }
-    applyI18N(lang.value || 'fr');
+    applyI18N(lang.value || 'fr'); lang.addEventListener('change', ()=> applyI18N(lang.value || 'fr'));
 
-    lang.addEventListener('change', ()=> applyI18N(lang.value || 'fr'));
-
-    const API_URL = window.ASTROFOOD_API_URL || '/api/astrofood';
-    let busy = false;
+    const API_URL = window.ASTROFOOD_API_URL || '/api/astrofood'; let busy=false;
 
     async function generate(){
-      if (busy) return; busy = true;
-      const code = lang.value || 'fr';
-      const t = I18N[code] || I18N.fr;
-      out.textContent = t.generating;
-
-      const payload = { lang: code, sign: sign.value, state: state.value, plan: plan.value, mode: (plan.value === 'daily3') ? 'mealplan' : 'recipe' };
-
+      if (busy) return; busy=true; const code=lang.value||'fr'; const t=I18N[code]||I18N.fr; out.textContent=t.generating;
+      const payload={ lang:code, sign:sign.value, state:state.value, plan:plan.value, mode:(plan.value==='daily3')?'mealplan':'recipe' };
       try{
-        if (TEST_MODE){
-          if (payload.mode === 'mealplan'){
-            out.innerHTML = `<h4>${t.plan}</h4>
-              <ul>
-                <li><strong>Petit‑déjeuner:</strong> Omelette astrale aux herbes 🌿</li>
-                <li><strong>Déjeuner:</strong> Salade quinoa‑mangue ✨</li>
-                <li><strong>Dîner:</strong> Saumon citron‑miel, légumes rôtis 🌙</li>
-              </ul>`;
-          } else {
-            out.innerHTML = `<h4>Recette</h4><p>Shake détox citron‑gingembre‑menthe 🍋🌱</p>`;
-          }
-          busy=false; return;
-        }
-
-        const r = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
-        if(!r.ok) throw new Error('HTTP '+r.status);
-        const data = await r.json();
-
-        if (payload.mode === 'mealplan'){
-          const b = data?.breakfast || '—';
-          const l = data?.lunch || '—';
-          const d = data?.dinner || '—';
-          out.innerHTML = `<h4>${t.plan}</h4>
-            <ul>
-              <li><strong>Breakfast / Petit‑déj:</strong> ${b}</li>
-              <li><strong>Lunch / Déjeuner:</strong> ${l}</li>
-              <li><strong>Dinner / Dîner:</strong> ${d}</li>
-            </ul>`;
+        if (TEST_MODE){ out.innerHTML='<h4>Recette</h4><p>Shake détox citron‑gingembre‑menthe 🍋🌱</p>'; LAST_RECIPE={ title:'Recette démo', ingredients:[{item:'Eau',qty:250,unit:'ml'}], steps:[{n:1,text:'Mélanger.'}]}; renderCoach(); return; }
+        let r; try{ r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});}catch(netErr){ LAST_ERROR=netErr; throw new Error('NETWORK_ERROR: '+netErr.message); }
+        if(!r.ok){ const txt=await r.text().catch(()=> ''); LAST_ERROR={status:r.status, body:txt}; throw new Error('HTTP_'+r.status+' '+txt.slice(0,120)); }
+        let data; try{ data=await r.json(); }catch(parseErr){ LAST_ERROR={parse:'JSON'}; throw new Error('INVALID_JSON'); }
+        if(payload.mode==='mealplan'){
+          const b=data?.breakfast||'—', l=data?.lunch||'—', d=data?.dinner||'—';
+          out.innerHTML=`<h4>Plan</h4><ul><li><strong>Breakfast / Petit‑déj:</strong> ${b}</li><li><strong>Lunch / Déjeuner:</strong> ${l}</li><li><strong>Dinner / Dîner:</strong> ${d}</li></ul>`;
+          LAST_RECIPE=null; renderCoach(true);
         } else {
-          const title = data?.title || data?.recipe?.title || 'Recette';
-          const body  = data?.recipe || data?.content || data?.text || '—';
-          const text = (typeof body === 'string') ? body : (body?.recipe || body?.content || '—');
-          out.innerHTML = `<h4>${title}</h4><p>${text}</p>`;
+          const rec=data?.recipe||data; LAST_RECIPE=rec;
+          const title = rec?.title||'Recette'; const bodyText = rec?.intro||rec?.description||'';
+          out.innerHTML=`<h4>${title}</h4><p>${bodyText}</p>`; renderCoach();
         }
-      } catch(err){
-        console.error(err);
-        out.textContent = (I18N[lang.value]?.error || I18N.fr.error);
-      } finally { busy=false; }
+      }catch(err){ console.error('[AstroFood] generate() error →', err,'\nLAST_ERROR:',LAST_ERROR); const msg=(I18N[lang.value]?.error||I18N.fr.error); out.innerHTML=`${msg}<pre style="white-space:pre-wrap;margin-top:.5rem;opacity:.8;border:1px dashed var(--border);padding:.5rem;border-radius:8px">${(err?.message||String(err)).slice(0,400)}</pre>`; }
+      finally{ busy=false; }
     }
 
     btn.addEventListener('click', generate);
 
-    // Shortcuts: Ctrl+Enter generate, L switch language
-    document.addEventListener('keydown', (e)=>{
-      if (e.ctrlKey && e.key === 'Enter') generate();
-      if (!e.ctrlKey && (e.key === 'l' || e.key === 'L')){
-        const values = ['fr','en','ar'];
-        const i = values.indexOf(lang.value);
-        lang.value = values[(i+1)%values.length];
-        lang.dispatchEvent(new Event('change'));
-      }
-    });
+    // Shortcuts
+    document.addEventListener('keydown', (e)=>{ if (e.ctrlKey && e.key==='Enter') generate(); if (!e.ctrlKey && (e.key==='l'||e.key==='L')){ const values=['fr','en','ar']; const i=values.indexOf(lang.value); lang.value=values[(i+1)%values.length]; lang.dispatchEvent(new Event('change')); } });
 
-    // Build card.html URL with params on click
-    function cardURL(){
-      const params = new URLSearchParams({ sign:sign.value, lang:lang.value, state:state.value, plan:plan.value });
-      const base = openCard.getAttribute('href') || '/card.html';
-      const url = new URL(base, window.location.origin);
-      url.search = params.toString();
-      return url.toString();
+    // Card link with params
+    function cardURL(){ const params=new URLSearchParams({sign:sign.value,lang:lang.value,state:state.value,plan:plan.value}); const base=openCard.getAttribute('href')||'/card.html'; const url=new URL(base, window.location.origin); url.search=params.toString(); return url.toString(); }
+    openCard.addEventListener('click', ()=>{ openCard.setAttribute('href', cardURL()); $('#tab-card').click(); $('#preview').src = cardURL(); });
+
+    // Copy & Ping
+    $('#copy-html').addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(out.innerHTML.trim()); alert('HTML copié ✅'); }catch(err){ alert('Impossible de copier'); } });
+    $('#clear-output').addEventListener('click', ()=>{ out.textContent='Prêt.'; });
+    $('#ping-api').addEventListener('click', async ()=>{ try{ const r=await fetch(API_URL,{method:'GET'}); const ok=r.ok; const text=await r.text(); out.innerHTML=`<strong>Ping API:</strong> ${ok?'✅ OK':'❌'}<pre style="white-space:pre-wrap;margin-top:.5rem;opacity:.85;border:1px dashed var(--border);padding:.5rem;border-radius:8px">${text.slice(0,400)}</pre>`; }catch(e){ out.innerHTML=`<strong>Ping API:</strong> ❌<pre style="white-space:pre-wrap;margin-top:.5rem;opacity:.85;border:1px dashed var(--border);padding:.5rem;border-radius:8px">${String(e).slice(0,400)}</pre>`; } });
+
+    // Tabs logic
+    function selectTab(which){ const card=(which==='card'); document.getElementById('tab-card').setAttribute('aria-selected', String(card)); document.getElementById('tab-coach').setAttribute('aria-selected', String(!card)); document.getElementById('pane-card').classList.toggle('active', card); document.getElementById('pane-coach').classList.toggle('active', !card); }
+    $('#tab-card').addEventListener('click', ()=> selectTab('card')); $('#tab-coach').addEventListener('click', ()=> selectTab('coach'));
+
+    // Coach‑AI renderer (client-side, no API change)
+    function msToMinSec(ms){ const sec=Math.max(0, Math.floor(ms/1000)); const m=String(Math.floor(sec/60)).padStart(2,'0'); const s=String(sec%60).padStart(2,'0'); return m+':'+s; }
+    function startTimer(id, secs){ stopTimer(id); const el=document.querySelector(`[data-timer='${id}']`); if(!el) return; const end=Date.now()+secs*1000; TIMERS[id]=setInterval(()=>{ const left=end-Date.now(); if(left<=0){ clearInterval(TIMERS[id]); el.textContent='00:00'; el.dataset.done='1'; return; } el.textContent=msToMinSec(left); }, 250); }
+    function stopTimer(id){ if(TIMERS[id]){ clearInterval(TIMERS[id]); delete TIMERS[id]; } }
+
+    function renderCoach(isPlan=false){ const root=$('#coach'); const t=I18N[lang.value]||I18N.fr; root.innerHTML=''; const h=document.createElement('h4'); h.textContent=t.coachTitle; root.appendChild(h);
+      if(isPlan){ const p=document.createElement('p'); p.className='tiny'; p.textContent='Le mode Coach‑AI est disponible pour les recettes uniques.'; root.appendChild(p); return; }
+      const r=LAST_RECIPE; if(!r){ const p=document.createElement('p'); p.className='tiny'; p.textContent='Génère une recette pour activer le Coach‑AI.'; root.appendChild(p); return; }
+      // Shopping list
+      const box1=document.createElement('div'); box1.innerHTML=`<div class='pill'>🧾 ${t.shopping}</div>`; root.appendChild(box1);
+      const ul=document.createElement('ul'); ul.className='list'; (r.ingredients||[]).slice(0,12).forEach(it=>{ const li=document.createElement('li'); const qty=(it.qty!==undefined? it.qty:''); const unit=it.unit?(' '+it.unit):''; const name=it.item||''; li.textContent=(qty||unit? (qty+unit+' • '):'')+name+(it.notes?(' — '+it.notes):''); ul.appendChild(li); }); root.appendChild(ul);
+      // Substitutions
+      if (r.substitutions && r.substitutions.length){ const box2=document.createElement('div'); box2.innerHTML=`<div class='pill'>🔁 ${t.subs}</div>`; root.appendChild(box2); const p=document.createElement('p'); p.className='tiny'; p.textContent=r.substitutions.join(' • '); root.appendChild(p); }
+      // Step timers
+      const box3=document.createElement('div'); box3.innerHTML=`<div class='pill'>⏲️ ${t.steps}</div>`; root.appendChild(box3);
+      (r.steps||[]).forEach((s,i)=>{ const step=document.createElement('div'); step.className='step'; const id='step_'+(s.n||i+1); step.innerHTML=`<div class='row'><div>${(s.n||i+1)+'. '+(s.text||'')}</div><div><span class='timer' data-timer='${id}'>${s.timer_sec? msToMinSec(s.timer_sec*1000):'--:--'}</span> <button class='tool' data-start='${id}'>${t.start}</button> <button class='tool' data-stop='${id}'>${t.stop}</button></div></div>`; root.appendChild(step); });
+      root.querySelectorAll('[data-start]').forEach(b=> b.addEventListener('click', ()=>{ const id=b.getAttribute('data-start'); const step=(r.steps||[]).find(x=>('step_'+(x.n||r.steps.indexOf(x)+1))===id); const secs=(step&&step.timer_sec)||0; if(secs>0) startTimer(id, secs); }));
+      root.querySelectorAll('[data-stop]').forEach(b=> b.addEventListener('click', ()=> stopTimer(b.getAttribute('data-stop')) ));
     }
-
-    openCard.addEventListener('click', (e)=>{
-      // keep target="_blank" behaviour, just ensure URL has params
-      openCard.setAttribute('href', cardURL());
-    });
-
-    // Copy helpers
-    $('#copy-html').addEventListener('click', async ()=>{
-      try{ await navigator.clipboard.writeText(out.innerHTML.trim()); alert('HTML copié ✅'); }
-      catch(err){ alert('Impossible de copier'); }
-    });
-    $('#clear-output').addEventListener('click', ()=>{ out.textContent = 'Prêt.'; });
   })();
+  // === Coach extras: labels, advice, and recipe-from-product ===
+    (function(){
+      const I = window.I18N || undefined; // may not be global; safe-guard below
+      function t(key, fallback){ try{ return (I && (I[document.documentElement.lang]||I.fr||{}))[key] || fallback; }catch(_){ return fallback; } }
+      // translate buttons if present
+      function applyCoachI18N(){
+        const el1 = document.querySelector('[data-i18n-coach="advice_btn"]'); if (el1) el1.textContent = t('advice_btn','Conseil nutritionnel');
+        const el2 = document.querySelector('[data-i18n-coach="gen_from"]'); if (el2) el2.textContent = t('gen_from','Générer recette');
+      }
+      applyCoachI18N();
+
+      // helper post JSON (idempotent)
+      if (!window.__postJSON__) {
+        window.__postJSON__ = async (url, payload)=>{ const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); };
+      }
+      const API_URL = window.ASTROFOOD_API_URL || '/api/astrofood';
+
+      const adviceBtn = document.getElementById('btn-advice');
+      const genBtn = document.getElementById('btn-gen-from-product');
+      const prodSel = document.getElementById('african-product');
+      const outBox = document.getElementById('coach-output');
+
+      if (adviceBtn) adviceBtn.addEventListener('click', async ()=>{
+        if (!outBox) return;
+        outBox.innerHTML = '<div class="pill">🧠 '+ (t('advice_btn','Conseil nutritionnel')) +'</div>';
+        try{
+          const lang = document.getElementById('lang').value; const sign = document.getElementById('sign').value; const state = document.getElementById('state').value;
+          const data = await window.__postJSON__(API_URL, { mode:'advice', lang, sign, state });
+          const adv = data?.advice || data || {};
+          const wrap=document.createElement('div'); wrap.className='step';
+          const dTitle=document.createElement('div'); dTitle.innerHTML='<strong>'+t('advice_do','À faire')+':</strong>';
+          const dList=document.createElement('ul'); dList.className='list'; (adv.do||[]).forEach(x=>{ const li=document.createElement('li'); li.textContent=String(x); dList.appendChild(li); });
+          const aTitle=document.createElement('div'); aTitle.style.marginTop='.5rem'; aTitle.innerHTML='<strong>'+t('advice_avoid','À éviter')+':</strong>';
+          const aList=document.createElement('ul'); aList.className='list'; (adv.avoid||[]).forEach(x=>{ const li=document.createElement('li'); li.textContent=String(x); aList.appendChild(li); });
+          wrap.appendChild(dTitle); wrap.appendChild(dList); wrap.appendChild(aTitle); wrap.appendChild(aList); outBox.appendChild(wrap);
+        }catch(e){ outBox.innerHTML += '<p class="tiny">❌ '+ (e.message||e) +'</p>'; }
+      });
+
+      if (genBtn) genBtn.addEventListener('click', async ()=>{
+        if (!prodSel || !prodSel.value){ alert('Choisis un produit africain.'); return; }
+        try{
+          const lang = document.getElementById('lang').value; const sign = document.getElementById('sign').value; const state = document.getElementById('state').value;
+          const data = await window.__postJSON__(API_URL, { mode:'recipe_from_product', lang, sign, state, base: prodSel.value });
+          const rec = data?.recipe || data; window.LAST_RECIPE = rec; // expose for existing coach renderers
+          const out = document.getElementById('ai-output'); if (out) { out.innerHTML = `<h4>${rec.title||'Recette'}</h4><p>${rec.intro||rec.description||''}</p>`; }
+          const tabCoach = document.getElementById('tab-coach'); if (tabCoach) tabCoach.click();
+          if (typeof window.renderCoach==='function') try{ window.renderCoach(false); }catch(_){ /*optional*/ }
+        }catch(e){ if(outBox) outBox.innerHTML += '<p class="tiny">❌ '+ (e.message||e) +'</p>'; }
+      });
+    })();
   </script>
 </body>
 </html>
