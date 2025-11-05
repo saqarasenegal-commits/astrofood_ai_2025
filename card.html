@@ -3,18 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AstroFood – Carte Digitale (Premium Light)</title>
+  <title>AstroFood – Carte Digitale (Premium Light v16.4)</title>
   <meta name="theme-color" content="#ffffff" />
   <style>
-    :root{
-      --bg:#fffdf8; --paper:#ffffff; --ink:#0f172a; --muted:#475569; --line:#e5e7eb;
-      --gold:#d4af37; --gold-2:#e8d18b; --accent:#0ea5e9; --pill:#f5f5f5;
-      --radius:16px; --shadow:0 12px 30px rgba(0,0,0,.08);
-    }
+    :root{ --bg:#fffdf8; --paper:#ffffff; --ink:#0f172a; --muted:#475569; --line:#e5e7eb; --gold:#d4af37; --gold-2:#e8d18b; --accent:#0ea5e9; --pill:#f5f5f5; --radius:16px; --shadow:0 12px 30px rgba(0,0,0,.08); }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0; background:var(--bg); color:var(--ink); font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";}
-    .wrap{max-width:880px; margin:24px auto; padding:0 16px}
+    body{margin:0; background:var(--bg); color:var(--ink); font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans"}
+    .wrap{max-width:920px; margin:24px auto; padding:0 16px}
 
     .card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
     .head{display:flex; gap:16px; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--line); background:linear-gradient(180deg, #fff, #fff9e8 60%)}
@@ -34,6 +30,11 @@
     .price{font-weight:800; color:#1f2937; font-size:1.1rem}
     .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; text-decoration:none; border:1px solid var(--line); background:#111827; color:#fff; font-weight:700}
     .btn.secondary{background:#fff; color:#111827}
+
+    /* Tabs */
+    .tabs{display:flex; gap:6px; padding:10px 22px; border-bottom:1px solid var(--line); background:#fff}
+    .tab{padding:8px 12px; border:1px solid var(--line); background:#fafafa; border-radius:10px; cursor:pointer; font-weight:600}
+    .tab[aria-selected="true"]{background:#111827; color:#fff; border-color:#111827}
 
     .grid{display:grid; grid-template-columns:1.2fr .8fr; gap:18px; padding:20px 22px}
     @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
@@ -55,12 +56,7 @@
     .sig{font-size:.9rem; color:#64748b}
 
     /* Print */
-    @media print{
-      body{background:#fff}
-      .wrap{margin:0; max-width:none; padding:0}
-      .btn{display:none}
-      .foot{border:0}
-    }
+    @media print{ body{background:#fff} .wrap{margin:0; max-width:none; padding:0} .btn{display:none} .foot{border:0} .tabs{display:none} }
   </style>
 </head>
 <body>
@@ -94,40 +90,71 @@
         </div>
         <div class="cta">
           <div class="price" id="r-price">—</div>
-          <a class="btn" id="btn-buy" href="#" target="_blank" rel="noopener">🛒 Acheter sur LemonSqueezy</a>
-          <div style="margin-top:8px">
-            <a class="btn secondary" id="btn-print" href="#">🖨️ Imprimer / PDF</a>
-          </div>
+          <a class="btn" id="btn-buy" href="#" target="_blank" rel="noopener">🛒 <span data-i18n="buy">Acheter sur LemonSqueezy</span></a>
+          <div style="margin-top:8px"><a class="btn secondary" id="btn-print" href="#">🖨️ <span data-i18n="print">Imprimer / PDF</span></a></div>
         </div>
       </section>
 
-      <section class="grid">
+      <!-- Tabs: Aperçu gratuit / Carte complète -->
+      <nav class="tabs" role="tablist" aria-label="Tabs">
+        <button class="tab" id="tab-preview" role="tab" aria-selected="true" aria-controls="panel-preview">👀 <span data-i18n="tab_preview">Aperçu gratuit</span></button>
+        <button class="tab" id="tab-full" role="tab" aria-selected="false" aria-controls="panel-full">🪪 <span data-i18n="tab_full">Carte complète</span></button>
+      </nav>
+
+      <!-- PREVIEW PANEL (gratuit) -->
+      <section id="panel-preview" role="tabpanel" aria-labelledby="tab-preview" class="grid">
         <div>
           <div class="section">
-            <h3>Ingrédients</h3>
+            <h3 data-i18n="ingredients">Ingrédients</h3>
+            <ul class="list" id="p-ingredients"></ul>
+            <p class="note" id="p-ingredients-more" style="margin-top:8px"></p>
+          </div>
+          <div class="section steps" style="margin-top:12px">
+            <h3 data-i18n="steps">Étapes</h3>
+            <div id="p-steps"></div>
+            <p class="note" id="p-steps-more" style="margin-top:8px"></p>
+          </div>
+        </div>
+        <aside>
+          <div class="section">
+            <h3 data-i18n="nutri">Valeurs nutritionnelles (≈/portion)</h3>
+            <table class="nutri" id="p-nutri"></table>
+          </div>
+          <div class="section" style="margin-top:12px">
+            <h3 data-i18n="allergens">Allergènes</h3>
+            <p class="note" id="p-allergens">—</p>
+          </div>
+        </aside>
+      </section>
+
+      <!-- FULL PANEL (payant) -->
+      <section id="panel-full" role="tabpanel" aria-labelledby="tab-full" class="grid" hidden>
+        <div>
+          <div class="section">
+            <h3 data-i18n="ingredients">Ingrédients</h3>
             <ul class="list" id="r-ingredients"></ul>
           </div>
           <div class="section" style="margin-top:12px">
-            <h3>Ustensiles</h3>
+            <h3 data-i18n="equipment">Ustensiles</h3>
             <ul class="list" id="r-equipment"></ul>
           </div>
           <div class="section steps" style="margin-top:12px">
-            <h3>Étapes</h3>
+            <h3 data-i18n="steps">Étapes</h3>
             <div id="r-steps"></div>
           </div>
         </div>
         <aside>
           <div class="section">
-            <h3>Valeurs nutritionnelles (≈/portion)</h3>
+            <h3 data-i18n="nutri">Valeurs nutritionnelles (≈/portion)</h3>
             <table class="nutri" id="r-nutri"></table>
           </div>
           <div class="section" style="margin-top:12px">
-            <h3>Allergènes & Substitutions</h3>
+            <h3 data-i18n="allergens_subs">Allergènes & Substitutions</h3>
             <p class="note" id="r-allergens">—</p>
             <p class="note" id="r-subs" style="margin-top:6px">—</p>
           </div>
           <div class="section" style="margin-top:12px">
-            <h3>Conservation & Réchauffage</h3>
+            <h3 data-i18n="storage">Conservation & Réchauffage</h3>
             <p class="note" id="r-storage">—</p>
           </div>
         </aside>
@@ -135,9 +162,7 @@
 
       <footer class="foot">
         <div class="sig">© AstroFood Premium Gold — eatbythestars.com</div>
-        <div>
-          <a class="btn secondary" id="btn-copy-url" href="#">Copier l’URL</a>
-        </div>
+        <div><a class="btn secondary" id="btn-copy-url" href="#">📋 <span data-i18n="copy_url">Copier l’URL</span></a></div>
       </footer>
     </article>
   </div>
@@ -145,151 +170,147 @@
   <script>
   (function(){
     'use strict';
+    // ====== I18N (UI labels) ======
+    const I18N = {
+      fr:{ buy:'Acheter sur LemonSqueezy', print:'Imprimer / PDF', tab_preview:'Aperçu gratuit', tab_full:'Carte complète', ingredients:'Ingrédients', equipment:'Ustensiles', steps:'Étapes', nutri:'Valeurs nutritionnelles (≈/portion)', allergens:'Allergènes', allergens_subs:'Allergènes & Substitutions', storage:'Conservation & Réchauffage', copy_url:"Copier l’URL", more_items:(n)=>`+${n} éléments supplémentaires…`, more_steps:(n)=>`+${n} étapes supplémentaires…` },
+      en:{ buy:'Buy on LemonSqueezy', print:'Print / PDF', tab_preview:'Free preview', tab_full:'Full card', ingredients:'Ingredients', equipment:'Equipment', steps:'Steps', nutri:'Nutrition (≈/serv.)', allergens:'Allergens', allergens_subs:'Allergens & Substitutions', storage:'Storage & Reheat', copy_url:'Copy URL', more_items:(n)=>`+${n} more items…`, more_steps:(n)=>`+${n} more steps…` },
+      ar:{ buy:'اشترِ من LemonSqueezy', print:'طباعة / PDF', tab_preview:'معاينة مجانية', tab_full:'البطاقة الكاملة', ingredients:'المكوّنات', equipment:'الأدوات', steps:'الخطوات', nutri:'القيم الغذائية (≈/حصّة)', allergens:'المسبّبات', allergens_subs:'المسبّبات والاستبدالات', storage:'الحفظ وإعادة التسخين', copy_url:'نسخ الرابط', more_items:(n)=>`+${n} عناصر إضافية…`, more_steps:(n)=>`+${n} خطوات إضافية…` }
+    };
 
-    // 1) Params & i18n minimal
+    // ====== Params ======
     const qs = new URLSearchParams(location.search);
     const lang = (qs.get('lang') || 'fr').toLowerCase();
     const sign = (qs.get('sign') || 'aries').toLowerCase();
     const state = (qs.get('state') || 'detox').toLowerCase();
     const plan = (qs.get('plan') || 'single').toLowerCase();
+    const tabParam = (qs.get('tab') || 'preview').toLowerCase();
 
-    document.documentElement.lang = lang;
-    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang; document.documentElement.dir = (lang==='ar')?'rtl':'ltr';
 
-    const SIGN_LABEL = { fr:{aries:'Bélier',taurus:'Taureau',gemini:'Gémeaux',cancer:'Cancer',leo:'Lion',virgo:'Vierge',libra:'Balance',scorpio:'Scorpion',sagittarius:'Sagittaire',capricorn:'Capricorne',aquarius:'Verseau',pisces:'Poissons'},
-                         en:{aries:'Aries',taurus:'Taurus',gemini:'Gemini',cancer:'Cancer',leo:'Leo',virgo:'Virgo',libra:'Libra',scorpio:'Scorpio',sagittarius:'Sagittarius',capricorn:'Capricorn',aquarius:'Aquarius',pisces:'Pisces'},
-                         ar:{aries:'الحمل',taurus:'الثور',gemini:'الجوزاء',cancer:'السرطان',leo:'الأسد',virgo:'العذراء',libra:'الميزان',scorpio:'العقرب',sagittarius:'القوس',capricorn:'الجدي',aquarius:'الدلو',pisces:'الحوت'} };
-
-    // 2) E-commerce config
-    const LS_URL = window.LEMONSQUEEZY_URL || 'https://astrofood.lemonsqueezy.com/buy/PRODUCT_ID';
-
-    // 3) Helpers
+    // ====== Helpers ======
     const $ = (id)=>document.getElementById(id);
     const setText = (id, value)=>{ const el=$(id); if(!el) return; el.textContent = value??'—'; };
-    const setHTMLSafeLines = (id, value)=>{ const el=$(id); if(!el) return; el.textContent = value?String(value):'—'; };
+    function fillList(rootId, arr, limit){
+      const root = $(rootId); if (!root) return; root.innerHTML = '';
+      const total = (arr||[]).length; const n = (typeof limit==='number')? Math.min(limit,total): total;
+      for(let i=0;i<n;i++){
+        const it = arr[i] || {}; const li = document.createElement('li');
+        const qty = (it.qty!==undefined)? String(it.qty):''; const unit = it.unit? (' '+it.unit):'';
+        const name = it.item || ''; const notes = it.notes? (' — '+it.notes):'';
+        const left = (qty+unit).trim(); li.textContent = (left? left+' • ' : '') + name + notes; root.appendChild(li);
+      }
+      return (total - n) > 0 ? (total - n) : 0;
+    }
+    function addSteps(rootId, steps, limit){
+      const root = $(rootId); if (!root) return; root.innerHTML='';
+      const total = (steps||[]).length; const n = (typeof limit==='number')? Math.min(limit,total): total;
+      for(let i=0;i<n;i++){
+        const s = steps[i] || {}; const row = document.createElement('div'); row.className='row';
+        const num = document.createElement('div'); num.className='num'; num.textContent = String(s.n || (i+1));
+        const body = document.createElement('div'); const text = document.createElement('div'); text.textContent = s.text || '';
+        body.appendChild(text);
+        if (s.timer_sec){ const t=document.createElement('div'); t.className='note'; t.textContent = '⏲️ ' + Math.round(s.timer_sec/60) + ' min'; body.appendChild(t); }
+        if (s.heat){ const h=document.createElement('div'); h.className='note'; h.textContent = '🔥 ' + s.heat; body.appendChild(h); }
+        row.appendChild(num); row.appendChild(body); root.appendChild(row);
+      }
+      return (total - n) > 0 ? (total - n) : 0;
+    }
+    function renderNutrition(tblId, n){
+      const tbl = $(tblId); tbl.innerHTML = '';
+      const rows = [ ['Énergie', n?.kcal ? n.kcal + ' kcal' : '—'], ['Protéines', n?.protein_g ? n.protein_g + ' g' : '—'], ['Glucides', n?.carb_g ? n.carb_g + ' g' : '—'], ['Lipides', n?.fat_g ? n.fat_g + ' g' : '—'] ];
+      if (n?.fiber_g) rows.push(['Fibres', n.fiber_g + ' g']); if (n?.sugar_g) rows.push(['Sucres', n.sugar_g + ' g']);
+      rows.forEach(([k,v])=>{ const tr=document.createElement('tr'); const th=document.createElement('th'); th.textContent=k; const td=document.createElement('td'); td.textContent=v; tr.appendChild(th); tr.appendChild(td); tbl.appendChild(tr); });
+    }
+    function priceCFA(n){ return (typeof n==='number' && isFinite(n)) ? new Intl.NumberFormat('fr-FR').format(n) + ' CFA / recette' : '—'; }
 
-    function fillList(id, arr, mapFn){
-      const root = $(id); if (!root) return; root.innerHTML = '';
-      (arr||[]).forEach((x)=>{
-        const li = document.createElement('li');
-        li.textContent = mapFn? mapFn(x): String(x);
-        root.appendChild(li);
+    // ====== UI Translations ======
+    function applyI18N(code){
+      const t = I18N[code] || I18N.fr;
+      document.querySelectorAll('[data-i18n]')?.forEach(el => {
+        const key = el.getAttribute('data-i18n'); const v = t[key]; if (typeof v === 'string') el.textContent = v;
       });
     }
-    function addStep(container, idx, s){
-      const row = document.createElement('div'); row.className='row';
-      const num = document.createElement('div'); num.className='num'; num.textContent = String(s.n || (idx+1));
-      const body = document.createElement('div');
-      const text = document.createElement('div'); text.textContent = s.text || '';
-      body.appendChild(text);
-      if (s.timer_sec){ const t=document.createElement('div'); t.className='note'; t.textContent = '⏲️ ' + Math.round(s.timer_sec/60) + ' min'; body.appendChild(t); }
-      if (s.heat){ const h=document.createElement('div'); h.className='note'; h.textContent = '🔥 ' + s.heat; body.appendChild(h); }
-      row.appendChild(num); row.appendChild(body);
-      container.appendChild(row);
+
+    // ====== E‑commerce config ======
+    const LS_URL = window.LEMONSQUEEZY_URL || 'https://astrofood.lemonsqueezy.com/buy/PRODUCT_ID';
+
+    // ====== Header badges ======
+    const SIGN_LABEL = { fr:{aries:'Bélier',taurus:'Taureau',gemini:'Gémeaux',cancer:'Cancer',leo:'Lion',virgo:'Vierge',libra:'Balance',scorpio:'Scorpion',sagittarius:'Sagittaire',capricorn:'Capricorne',aquarius:'Verseau',pisces:'Poissons'}, en:{aries:'Aries',taurus:'Taurus',gemini:'Gemini',cancer:'Cancer',leo:'Leo',virgo:'Virgo',libra:'Libra',scorpio:'Scorpio',sagittarius:'Sagittarius',capricorn:'Capricorn',aquarius:'Aquarius',pisces:'Pisces'}, ar:{aries:'الحمل',taurus:'الثور',gemini:'الجوزاء',cancer:'السرطان',leo:'الأسد',virgo:'العذراء',libra:'الميزان',scorpio:'العقرب',sagittarius:'القوس',capricorn:'الجدي',aquarius:'الدلو',pisces:'الحوت'} };
+    function setBadges(){
+      const lbl = (SIGN_LABEL[lang]||SIGN_LABEL.fr)[sign] || sign;
+      setText('b-sign', lbl); setText('b-state', state); setText('b-plan', (plan==='daily3') ? '3×':'1×'); setText('b-lang', lang.toUpperCase());
     }
 
-    function renderNutrition(tbl, n){
-      const rows = [
-        ['Énergie', n?.kcal ? n.kcal + ' kcal' : '—'],
-        ['Protéines', n?.protein_g ? n.protein_g + ' g' : '—'],
-        ['Glucides', n?.carb_g ? n.carb_g + ' g' : '—'],
-        ['Lipides', n?.fat_g ? n.fat_g + ' g' : '—']
-      ];
-      if (n?.fiber_g) rows.push(['Fibres', n.fiber_g + ' g']);
-      if (n?.sugar_g) rows.push(['Sucres', n.sugar_g + ' g']);
-      tbl.innerHTML = '';
-      rows.forEach(([k,v])=>{
-        const tr = document.createElement('tr');
-        const th = document.createElement('th'); th.textContent = k;
-        const td = document.createElement('td'); td.textContent = v;
-        tr.appendChild(th); tr.appendChild(td); tbl.appendChild(tr);
-      });
-    }
-
-    function priceCFA(n){ return (typeof n === 'number' && isFinite(n)) ? new Intl.NumberFormat('fr-FR').format(n) + ' CFA / recette' : '—'; }
-
-    // 4) Set header badges
-    setText('b-sign', (SIGN_LABEL[lang]||SIGN_LABEL.fr)[sign] || sign);
-    setText('b-state', state);
-    setText('b-plan', (plan==='daily3') ? '3×' : '1×');
-    setText('b-lang', lang.toUpperCase());
-
-    // 5) Fetch data from API
+    // ====== API ======
     const API_URL = window.ASTROFOOD_API_URL || '/api/astrofood';
-
-    async function load(){
+    async function fetchRecipe(){
       const payload = { lang, sign, state, plan, mode: 'recipe' };
       const r = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const data = await r.json();
-      const d = data.recipe || data;
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      const json = await r.json();
+      return json.recipe || json; // server-side translation preferred
+    }
 
-      // Title & subtitle
-      setText('r-title', d.title || 'Recette');
-      setText('r-subtitle', d.subtitle || '');
+    // ====== Tabs ======
+    function selectTab(which){
+      const isPreview = (which === 'preview');
+      document.getElementById('tab-preview').setAttribute('aria-selected', String(isPreview));
+      document.getElementById('tab-full').setAttribute('aria-selected', String(!isPreview));
+      document.getElementById('panel-preview').hidden = !isPreview;
+      document.getElementById('panel-full').hidden = isPreview;
+    }
 
-      // Thumb (emoji or initial)
-      const emoji = d.image_emoji || d.emoji || '🍽️';
-      $('r-thumb').textContent = emoji;
+    // ====== Load + Render ======
+    async function load(){
+      applyI18N(lang); setBadges();
+      document.getElementById('btn-buy').href = LS_URL;
+      try{
+        const d = await fetchRecipe();
+        // header
+        const emoji = d.image_emoji || d.emoji || '🍽️'; document.getElementById('r-thumb').textContent = emoji;
+        setText('r-title', d.title || 'Recette'); setText('r-subtitle', d.subtitle || '');
+        setText('c-servings', d.servings? d.servings+' portions':'—'); setText('c-diff', d.difficulty||'—'); setText('c-method', d.method||'—');
+        const total = d.time?.total || ((d.time?.prep||0)+(d.time?.cook||0)||null); setText('c-time', total? ('Total: '+total+' min'):'—');
+        setText('c-cuisine', d.cuisine||'—'); setText('c-course', d.course||'—');
+        document.getElementById('r-price').textContent = priceCFA(d.price_cfa);
+        document.getElementById('r-intro').textContent = d.intro || d.description || '';
 
-      // Meta chips
-      setText('c-servings', d.servings ? d.servings + ' portions' : '—');
-      setText('c-diff', d.difficulty || '—');
-      setText('c-method', d.method || '—');
-      const total = d.time?.total || ((d.time?.prep||0) + (d.time?.cook||0) || null);
-      setText('c-time', total ? ('Total: ' + total + ' min') : '—');
-      setText('c-cuisine', d.cuisine || '—');
-      setText('c-course', d.course || '—');
+        // PREVIEW (free): first 5 ingredients + first 2 steps + nutrition basic + allergens
+        const moreIng = fillList('p-ingredients', d.ingredients, 5);
+        document.getElementById('p-ingredients-more').textContent = moreIng>0 ? (I18N[lang].more_items(moreIng)) : '';
+        const moreSteps = addSteps('p-steps', d.steps, 2);
+        document.getElementById('p-steps-more').textContent = moreSteps>0 ? (I18N[lang].more_steps(moreSteps)) : '';
+        renderNutrition('p-nutri', d.nutrition||{});
+        setText('p-allergens', (d.allergens&&d.allergens.length)? d.allergens.join(', '):'—');
 
-      // Intro
-      setHTMLSafeLines('r-intro', d.intro || d.description || '');
+        // FULL (paid): everything
+        fillList('r-ingredients', d.ingredients);
+        fillList('r-equipment', d.equipment, undefined);
+        addSteps('r-steps', d.steps);
+        renderNutrition('r-nutri', d.nutrition||{});
+        setText('r-allergens', (d.allergens&&d.allergens.length)? d.allergens.join(', '):'—');
+        setText('r-subs', (d.substitutions&&d.substitutions.length)? d.substitutions.join(' • '):'—');
+        if (d.storage){
+          const arr=[]; if (d.storage.fridge_days) arr.push('Frigo: '+d.storage.fridge_days+' j.'); if (d.storage.freezer_days) arr.push('Congélateur: '+d.storage.freezer_days+' j.'); if (d.storage.reheat) arr.push('Réchauffage: '+d.storage.reheat);
+          setText('r-storage', arr.join(' • ') || '—');
+        } else { setText('r-storage','—'); }
 
-      // Price & buy
-      $('r-price').textContent = priceCFA(d.price_cfa);
-      $('btn-buy').href = LS_URL;
-
-      // Ingredients
-      fillList('r-ingredients', d.ingredients, (it)=>{
-        const qty = (it && (it.qty !== undefined)) ? String(it.qty) : '';
-        const unit = (it && it.unit) ? (' ' + it.unit) : '';
-        const name = it?.item || '';
-        const notes = it?.notes ? (' — ' + it.notes) : '';
-        return (qty + unit).trim() + ( (qty||unit)? ' • ' : '') + name + notes;
-      });
-
-      // Equipment
-      fillList('r-equipment', d.equipment, (t)=> String(t));
-
-      // Steps
-      const steps = $('r-steps'); steps.innerHTML = '';
-      (d.steps||[]).forEach((s,i)=> addStep(steps,i,s));
-
-      // Nutrition
-      renderNutrition($('r-nutri'), d.nutrition);
-
-      // Allergens / substitutions / storage
-      setText('r-allergens', (d.allergens && d.allergens.length) ? d.allergens.join(', ') : '—');
-      setText('r-subs', (d.substitutions && d.substitutions.length) ? d.substitutions.join(' • ') : '—');
-      if (d.storage){
-        const parts = [];
-        if (d.storage.fridge_days) parts.push('Frigo: ' + d.storage.fridge_days + ' j.');
-        if (d.storage.freezer_days) parts.push('Congélateur: ' + d.storage.freezer_days + ' j.');
-        if (d.storage.reheat) parts.push('Réchauffage: ' + d.storage.reheat);
-        setText('r-storage', parts.join(' • ') || '—');
-      } else {
-        setText('r-storage', '—');
+        // Select tab (preview by default or ?tab=full)
+        selectTab(tabParam==='full' ? 'full' : 'preview');
+      } catch(e){
+        console.error(e);
+        document.getElementById('p-steps').innerHTML = '<p class="note">❌ Impossible de charger la recette.</p>';
       }
     }
 
-    // 6) Actions
-    $('btn-print').addEventListener('click', (e)=>{ e.preventDefault(); window.print(); });
-    $('btn-copy-url').addEventListener('click', async (e)=>{ e.preventDefault(); try{ await navigator.clipboard.writeText(location.href); alert('URL copiée ✅'); }catch(_){ alert('Impossible de copier'); }});
+    // ====== Events ======
+    document.getElementById('btn-copy-url').addEventListener('click', async (e)=>{ e.preventDefault(); try{ await navigator.clipboard.writeText(location.href); alert('URL copiée ✅'); }catch(_){ alert('Impossible de copier'); }});
+    document.getElementById('btn-print').addEventListener('click', (e)=>{ e.preventDefault(); window.print(); });
+    document.getElementById('tab-preview').addEventListener('click', ()=> selectTab('preview'));
+    document.getElementById('tab-full').addEventListener('click', ()=> selectTab('full'));
 
-    // 7) Load
-    load().catch(err=>{
-      console.error(err);
-      $('r-steps').innerHTML = '<p class="note">❌ Impossible de charger la recette.</p>';
-    });
+    // ====== Init ======
+    load();
   })();
   </script>
 </body>
