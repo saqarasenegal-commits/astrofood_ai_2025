@@ -245,7 +245,170 @@
       }catch(e){
         out.textContent = "❌ Erreur front : "+e.message;
       }
+  
+(() => {
+  if (window.__ASTROFOOD_INIT__) return;
+  window.__ASTROFOOD_INIT__ = true;
+
+  // --- Raccourcis DOM
+  const $ = (s) => document.querySelector(s);
+  const btn   = $("#btn-recipe");
+  const lang  = $("#lang");
+  const sign  = $("#sign");
+  const state = $("#state");
+  const plan  = $("#plan");
+  const out   = $("#ai-output");
+  const openCard = $("#open-digital-card");
+
+  if (!btn || !lang || !sign || !state || !plan || !out) {
+    console.warn("[AstroFood] IDs manquants.");
+    return;
+  }
+
+  // --- i18n simple (utilise aussi data-i18n-* déjà présents dans ton HTML)
+  const T = {
+    fr: {
+      generating: "🍳 Génération…",
+      error: "❌ Erreur de génération",
+      breakfast: "Petit-déjeuner",
+      lunch: "Déjeuner",
+      dinner: "Dîner",
+      title_recipe: "Recette",
+      title_plan: "Plan de repas"
+    },
+    en: {
+      generating: "🍳 Generating…",
+      error: "❌ Generation error",
+      breakfast: "Breakfast",
+      lunch: "Lunch",
+      dinner: "Dinner",
+      title_recipe: "Recipe",
+      title_plan: "Meal plan"
+    },
+    ar: {
+      generating: "🍳 جاري الإنشاء…",
+      error: "❌ خطأ في الإنشاء",
+      breakfast: "فطور",
+      lunch: "غداء",
+      dinner: "عشاء",
+      title_recipe: "وصفة",
+      title_plan: "خطة وجبات"
+    }
+  };
+
+  function setLang(code) {
+    document.documentElement.lang = code;
+    document.documentElement.dir = (code === "ar") ? "rtl" : "ltr";
+
+    // Met à jour les éléments qui portent data-i18n-*
+    document.querySelectorAll("[data-i18n-fr]").forEach(el => {
+      const key = `data-i18n-${code}`;
+      if (el.hasAttribute(key)) el.textContent = el.getAttribute(key);
     });
-  </script>
+  }
+  setLang(lang.value || "fr");
+  lang.addEventListener("change", () => setLang(lang.value || "fr"));
+
+  // --- Normalisation des signes (ton <select id="sign"> n'a pas de values)
+  const SIGN_MAP = {
+    // FR
+    "bélier":"aries","taureau":"taurus","gémeaux":"gemini","cancer":"cancer",
+    "lion":"leo","vierge":"virgo","balance":"libra","scorpion":"scorpio",
+    "sagittaire":"sagittarius","capricorne":"capricorn","verseau":"aquarius","poissons":"pisces",
+    // EN
+    "aries":"aries","taurus":"taurus","gemini":"gemini","cancer":"cancer",
+    "leo":"leo","virgo":"virgo","libra":"libra","scorpio":"scorpio",
+    "sagittarius":"sagittarius","capricorn":"capricorn","aquarius":"aquarius","pisces":"pisces",
+    // AR (translits courtes usuelles)
+    "الحمل":"aries","الثور":"taurus","الجوزاء":"gemini","السرطان":"cancer",
+    "الأسد":"leo","العذراء":"virgo","الميزان":"libra","العقرب":"scorpio",
+    "القوس":"sagittarius","الجدي":"capricorn","الدلو":"aquarius","الحوت":"pisces"
+  };
+
+  function getSignKey() {
+    // Si jamais tu ajoutes plus tard des value="aries", on les prend en priorité
+    const v = (sign.value || "").trim();
+    if (SIGN_MAP[v.toLowerCase()]) return SIGN_MAP[v.toLowerCase()];
+    // Sinon on regarde le texte sélectionné
+    const txt = (sign.options[sign.selectedIndex]?.text || "").trim().toLowerCase();
+    return SIGN_MAP[txt] || "aries";
+  }
+
+  // --- API
+  const API_URL = window.ASTROFOOD_API_URL || "/api/astrofood";
+  let busy = false;
+
+  btn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (busy) return;
+    busy = true;
+
+    const lg = lang.value || "fr";
+    const ui = T[lg] || T.fr;
+    out.textContent = ui.generating;
+
+    const payload = {
+      lang: lg,
+      sign: getSignKey(),
+      state: state.value || "detox",
+      plan: plan.value || "single",
+      mode: (plan.value === "daily3") ? "mealplan" : "recipe"
+    };
+
+    try {
+      const r = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const data = await r.json();
+
+      // Rendus flexibles selon la réponse API
+      if (payload.mode === "mealplan") {
+        // Attendu idéal: data.breakfast / data.lunch / data.dinner (texte HTML ou texte simple)
+        const b = data?.breakfast || data?.petit_dejeuner || data?.pdj || "";
+        const l = data?.lunch || data?.dejeuner || "";
+        const d = data?.dinner || data?.diner || "";
+
+        out.innerHTML = `
+          <h3>${ui.title_plan}</h3>
+          <div class="grid2" style="gap:1rem;">
+            <div><h4>${ui.breakfast}</h4><p>${b || "—"}</p></div>
+            <div><h4>${ui.lunch}</h4><p>${l || "—"}</p></div>
+            <div><h4>${ui.dinner}</h4><p>${d || "—"}</p></div>
+          </div>
+        `;
+      } else {
+        // Attendu idéal: data.title / data.recipe
+        const title = data?.title || ui.title_recipe;
+        const body  = data?.recipe || data?.content || data?.text || "";
+        out.innerHTML = `<h3>${title}</h3><p>${body || "—"}</p>`;
+      }
+    } catch (err) {
+      console.error(err);
+      out.textContent = (T[lang.value]?.error || T.fr.error);
+    } finally {
+      busy = false;
+    }
+  });
+
+  // --- Synchroniser la "carte digitale" avec les paramètres choisis
+  if (openCard) {
+    openCard.addEventListener("click", (e) => {
+      // on garde target=_blank, on ajoute les query params
+      const params = new URLSearchParams({
+        sign: getSignKey(),
+        lang: (lang.value || "fr"),
+        state: (state.value || "detox"),
+        plan: (plan.value || "single")
+      });
+      const url = new URL(openCard.getAttribute("href"), window.location.origin);
+      url.search = params.toString();
+      openCard.setAttribute("href", url.toString());
+    });
+  }
+})();
+</script>
 </body>
 </html>
