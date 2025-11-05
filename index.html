@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AstroFood Premium Gold — Desktop v16 (Fixed)</title>
+  <title>AstroFood Premium Gold — Index (Dark Astral)</title>
   <meta name="theme-color" content="#0f172a" />
   <style>
     :root{
@@ -20,8 +20,9 @@
     }
     *,*:before,*:after{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif; display:flex; flex-direction:column}
-    /* --- Topbar --- */
+    body{margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans, sans-serif; display:flex; flex-direction:column}
+
+    /* Topbar */
     .topbar{display:flex; align-items:center; justify-content:space-between; padding:.9rem 1.25rem; border-bottom:1px solid var(--border); background:linear-gradient(to bottom, rgba(2,6,23,.9), rgba(2,6,23,.6)); position:sticky; top:0; z-index:30; backdrop-filter: blur(6px)}
     .brand{display:flex; align-items:center; gap:.75rem}
     .brand .dot{width:10px; height:10px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 6px rgba(251,191,36,.15)}
@@ -29,12 +30,12 @@
     .actions{display:flex; align-items:center; gap:.5rem}
     .badge{font-size:.75rem; opacity:.75; border:1px solid var(--border); padding:.25rem .5rem; border-radius:999px}
 
-    /* --- Layout --- */
+    /* Layout */
     .layout{display:grid; grid-template-columns: 340px 1fr; gap:1.25rem; padding:1.25rem; width:100%; max-width:1280px; margin:0 auto; flex:1}
     @media (max-width: 960px){ .layout{grid-template-columns:1fr} }
     .panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
 
-    /* --- Sidebar --- */
+    /* Sidebar */
     .sidebar{padding:1rem}
     .sidebar h2{font-size:1rem; margin:.25rem 0 1rem; color:var(--muted)}
     .field{margin-bottom:1rem}
@@ -46,7 +47,7 @@
     .btn.primary:active{transform:translateY(1px)}
     .hint{font-size:.82rem; color:var(--muted); margin-top:.35rem}
 
-    /* --- Content --- */
+    /* Content */
     .content{display:flex; flex-direction:column}
     .hero{padding:1rem 1.25rem; border-bottom:1px solid var(--border)}
     .hero h3{margin:.2rem 0 .35rem; color:var(--gold)}
@@ -66,36 +67,34 @@
     .preview iframe{width:100%; height:420px; border:0; display:block; background:#0b1220}
 
     .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.75rem; border:1px solid var(--border); border-bottom-width:3px; padding:.08rem .35rem; border-radius:6px; background:var(--surface-2)}
-
-    /* --- Tests --- */
-    .tests{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.5rem}
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="brand"><span class="dot"></span><h1>AstroFood Premium Gold</h1></div>
     <div class="actions">
-      <span class="badge">Desktop layout</span>
-      <span class="badge">v16 Fixed</span>
+      <span class="badge">Dark Astral</span>
+      <span class="badge">v16.4</span>
     </div>
   </header>
 
   <main class="layout">
     <!-- Sidebar Controls -->
     <aside class="panel sidebar" id="controls">
-      <h2>Contrôles</h2>
+      <h2 id="lbl-controls">Contrôles</h2>
+
       <div class="field">
-        <label>Langue</label>
+        <label for="lang" id="lbl-lang">Langue</label>
         <select id="lang">
           <option value="fr">Français</option>
           <option value="en">English</option>
           <option value="ar">العربية</option>
         </select>
-        <div class="hint">Astuce : <span class="kbd">L</span> pour basculer rapidement.</div>
+        <div class="hint" id="hint-lang">Astuce : <span class="kbd">L</span> pour basculer rapidement.</div>
       </div>
 
       <div class="field">
-        <label>Votre signe</label>
+        <label for="sign" id="lbl-sign">Votre signe</label>
         <select id="sign">
           <option value="aries">Bélier</option><option value="taurus">Taureau</option>
           <option value="gemini">Gémeaux</option><option value="cancer">Cancer</option>
@@ -108,7 +107,7 @@
 
       <div class="row">
         <div class="field">
-          <label>Objectif / État</label>
+          <label for="state" id="lbl-state">Objectif / État</label>
           <select id="state">
             <option value="detox">Détox</option>
             <option value="energy_boost">Booster énergie</option>
@@ -119,34 +118,29 @@
           </select>
         </div>
         <div class="field">
-          <label>Plan de repas</label>
+          <label for="plan" id="lbl-plan">Plan de repas</label>
           <select id="plan">
             <option value="single">Recette unique</option>
             <option value="daily3">3 repas / jour</option>
           </select>
         </div>
       </div>
-          <a class="btn" id="open-digital-card" href="/card.html" target="_blank" rel="noopener">📇 Ouvrir la carte digitale</a>
+
       <div class="field">
-        <button class="btn primary" id="btn-recipe" type="button">🍳 Générer <span class="hint" style="margin-left:.35rem">(<span class="kbd">Ctrl</span> + <span class="kbd">Entrée</span>)</span></button>
+        <button class="btn primary" id="btn-recipe" type="button">🍳 <span id="btn-generate-label">Générer</span></button>
       </div>
 
       <div class="field">
-        <a class="btn" id="open-digital-card" href="#" target="previewFrame" rel="noopener">📇 Ouvrir la carte digitale</a>
-        <div class="hint">La carte s'ouvre dans l'aperçu à droite.</div>
-      </div>
-
-      <div class="tests">
-        <button class="tool" id="test-generate">Test : Générer (DEMO)</button>
-        <button class="tool" id="test-card">Test : Carte (Blob)</button>
+        <a class="btn" id="open-digital-card" href="/card.html" target="_blank" rel="noopener">📇 <span id="btn-card-label">Ouvrir la carte digitale</span></a>
+        <div class="hint" id="hint-card">La carte s'ouvre dans un nouvel onglet.</div>
       </div>
     </aside>
 
     <!-- Main Content -->
     <section class="panel content">
       <div class="hero">
-        <h3>Assistant Chef‑AI</h3>
-        <p>Générez des recettes et plans 3 repas adaptés à votre signe et votre objectif.</p>
+        <h3 id="hero-title">Assistant Chef‑AI</h3>
+        <p id="hero-desc">Générez des recettes et plans 3 repas adaptés à votre signe et votre objectif.</p>
       </div>
 
       <div class="work">
@@ -160,10 +154,10 @@
 
         <div class="panel preview">
           <div class="preview-head">
-            <div style="opacity:.8">Aperçu de la carte digitale</div>
-            <div class="hint">Basculer : <span class="kbd">P</span></div>
+            <div style="opacity:.8" id="preview-title">Aperçu de la carte (ouvrir dans un onglet)</div>
+            <div class="hint" id="preview-hint">Raccourcis : <span class="kbd">Ctrl</span>+<span class="kbd">Entrée</span> pour générer</div>
           </div>
-          <iframe id="preview" name="previewFrame" title="Aperçu carte"></iframe>
+          <iframe id="preview" title="Aperçu carte" srcdoc="<html><body style='margin:0;background:#0b1220;color:#94a3b8;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100%'>Cliquez ‘Ouvrir la carte digitale’</body></html>"></iframe>
         </div>
       </div>
     </section>
@@ -172,7 +166,7 @@
   <script>
   (() => {
     if (window.__ASTROFOOD_INIT__) return; window.__ASTROFOOD_INIT__ = true;
-    const TEST_MODE = true; // Passez à false quand l'API est prête
+    const TEST_MODE = false; // mettre true pour démo locale
 
     const $ = s => document.querySelector(s);
     const lang = $('#lang');
@@ -182,82 +176,136 @@
     const out = $('#ai-output');
     const btn = $('#btn-recipe');
     const openCard = $('#open-digital-card');
-    const iframe = $('#preview');
 
-    // i18n minimal
-    const T = {
-      fr:{generating:'🍳 Génération…', error:'❌ Erreur de génération', breakfast:'Petit‑déjeuner', lunch:'Déjeuner', dinner:'Dîner', title_recipe:'Recette', title_plan:'Plan de repas'},
-      en:{generating:'🍳 Generating…', error:'❌ Generation error', breakfast:'Breakfast', lunch:'Lunch', dinner:'Dinner', title_recipe:'Recipe', title_plan:'Meal plan'},
-      ar:{generating:'🍳 جاري الإنشاء…', error:'❌ خطأ في الإنشاء', breakfast:'فطور', lunch:'غداء', dinner:'عشاء', title_recipe:'وصفة', title_plan:'خطة وجبات'}
+    // i18n labels
+    const I18N = {
+      fr: {
+        controls: 'Contrôles', lang: 'Langue', hintLang: 'Astuce : L pour basculer rapidement.',
+        sign: 'Votre signe', state: 'Objectif / État', plan: 'Plan de repas',
+        generate: 'Générer', card: 'Ouvrir la carte digitale', hintCard: "La carte s'ouvre dans un nouvel onglet.",
+        heroTitle: 'Assistant Chef‑AI', heroDesc: 'Générez des recettes et plans 3 repas adaptés à votre signe et votre objectif.',
+        generating: '🍳 Génération…', error: '❌ Erreur de génération',
+        previewTitle: 'Aperçu de la carte (ouvrir dans un onglet)', previewHint: 'Raccourcis : Ctrl+Entrée pour générer'
+      },
+      en: {
+        controls: 'Controls', lang: 'Language', hintLang: 'Tip: press L to switch quickly.',
+        sign: 'Your sign', state: 'Goal / State', plan: 'Meal plan',
+        generate: 'Generate', card: 'Open digital card', hintCard: 'The card opens in a new tab.',
+        heroTitle: 'Chef‑AI Assistant', heroDesc: 'Generate recipes and 3‑meal plans tailored to your sign and goal.',
+        generating: '🍳 Generating…', error: '❌ Generation error',
+        previewTitle: 'Card preview (open in a new tab)', previewHint: 'Shortcuts: Ctrl+Enter to generate'
+      },
+      ar: {
+        controls: 'التحكم', lang: 'اللغة', hintLang: 'نصيحة: اضغط L للتبديل بسرعة.',
+        sign: 'برجك', state: 'الهدف / الحالة', plan: 'خطة الوجبات',
+        generate: 'إنشاء', card: 'فتح البطاقة الرقمية', hintCard: 'تفتح البطاقة في علامة تبويب جديدة.',
+        heroTitle: 'مساعد الشيف‑AI', heroDesc: 'أنشئ وصفات وخطط ٣ وجبات حسب برجك وهدفك.',
+        generating: '🍳 جاري الإنشاء…', error: '❌ خطأ في الإنشاء',
+        previewTitle: 'معاينة البطاقة (افتح في علامة تبويب)', previewHint: 'اختصار: Ctrl+Enter للإنشاء'
+      }
     };
 
-    function setLang(code){
-      document.documentElement.lang = code;
-      document.documentElement.dir = (code === 'ar') ? 'rtl' : 'ltr';
+    function applyI18N(code){
+      const t = I18N[code] || I18N.fr;
+      $('#lbl-controls').textContent = t.controls;
+      $('#lbl-lang').textContent = t.lang; $('#hint-lang').textContent = t.hintLang;
+      $('#lbl-sign').textContent = t.sign; $('#lbl-state').textContent = t.state; $('#lbl-plan').textContent = t.plan;
+      $('#btn-generate-label').textContent = t.generate;
+      $('#btn-card-label').textContent = t.card; $('#hint-card').textContent = t.hintCard;
+      $('#hero-title').textContent = t.heroTitle; $('#hero-desc').textContent = t.heroDesc;
+      $('#preview-title').textContent = t.previewTitle; $('#preview-hint').textContent = t.previewHint;
+      document.documentElement.lang = code; document.documentElement.dir = (code === 'ar') ? 'rtl' : 'ltr';
     }
-    setLang(lang.value || 'fr');
-    lang.addEventListener('change', ()=> setLang(lang.value || 'fr'));
+    applyI18N(lang.value || 'fr');
+
+    lang.addEventListener('change', ()=> applyI18N(lang.value || 'fr'));
 
     const API_URL = window.ASTROFOOD_API_URL || '/api/astrofood';
     let busy = false;
 
     async function generate(){
       if (busy) return; busy = true;
-      const lg = lang.value || 'fr';
-      const ui = T[lg] || T.fr;
-      out.textContent = ui.generating;
+      const code = lang.value || 'fr';
+      const t = I18N[code] || I18N.fr;
+      out.textContent = t.generating;
 
-      const payload = { lang: lg, sign: sign.value, state: state.value, plan: plan.value, mode: (plan.value === 'daily3') ? 'mealplan' : 'recipe' };
+      const payload = { lang: code, sign: sign.value, state: state.value, plan: plan.value, mode: (plan.value === 'daily3') ? 'mealplan' : 'recipe' };
 
       try{
         if (TEST_MODE){
           if (payload.mode === 'mealplan'){
-            out.innerHTML = `
-              <h4>${ui.title_plan}</h4>
+            out.innerHTML = `<h4>${t.plan}</h4>
               <ul>
-                <li><strong>${ui.breakfast}:</strong> Omelette astrale aux herbes 🌿</li>
-                <li><strong>${ui.lunch}:</strong> Salade quinoa‑mangue ✨</li>
-                <li><strong>${ui.dinner}:</strong> Saumon citron‑miel, légumes rôtis 🌙</li>
+                <li><strong>Petit‑déjeuner:</strong> Omelette astrale aux herbes 🌿</li>
+                <li><strong>Déjeuner:</strong> Salade quinoa‑mangue ✨</li>
+                <li><strong>Dîner:</strong> Saumon citron‑miel, légumes rôtis 🌙</li>
               </ul>`;
           } else {
-            out.innerHTML = `<h4>${ui.title_recipe}</h4><p>Shake détox citron‑gingembre‑menthe 🍋🌱</p>`;
+            out.innerHTML = `<h4>Recette</h4><p>Shake détox citron‑gingembre‑menthe 🍋🌱</p>`;
           }
-          busy = false; return;
+          busy=false; return;
         }
 
         const r = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
         if(!r.ok) throw new Error('HTTP '+r.status);
         const data = await r.json();
+
         if (payload.mode === 'mealplan'){
-          const b = data && (data.breakfast || '—');
-          const l = data && (data.lunch || '—');
-          const d = data && (data.dinner || '—');
-          out.innerHTML = `<h4>${ui.title_plan}</h4>
+          const b = data?.breakfast || '—';
+          const l = data?.lunch || '—';
+          const d = data?.dinner || '—';
+          out.innerHTML = `<h4>${t.plan}</h4>
             <ul>
-              <li><strong>${ui.breakfast}:</strong> ${b}</li>
-              <li><strong>${ui.lunch}:</strong> ${l}</li>
-              <li><strong>${ui.dinner}:</strong> ${d}</li>
+              <li><strong>Breakfast / Petit‑déj:</strong> ${b}</li>
+              <li><strong>Lunch / Déjeuner:</strong> ${l}</li>
+              <li><strong>Dinner / Dîner:</strong> ${d}</li>
             </ul>`;
         } else {
-          const title = (data && (data.title || (data.recipe && data.recipe.title))) || ui.title_recipe;
-          const body  = (data && (data.recipe || data.content || data.text || data.body || data.description)) || '—';
-          const text = typeof body === 'string' ? body : (body.recipe || body.content || '—');
+          const title = data?.title || data?.recipe?.title || 'Recette';
+          const body  = data?.recipe || data?.content || data?.text || '—';
+          const text = (typeof body === 'string') ? body : (body?.recipe || body?.content || '—');
           out.innerHTML = `<h4>${title}</h4><p>${text}</p>`;
         }
       } catch(err){
         console.error(err);
-        out.textContent = (T[lang.value]?.error || T.fr.error);
-      } finally{ busy = false; }
+        out.textContent = (I18N[lang.value]?.error || I18N.fr.error);
+      } finally { busy=false; }
     }
 
     btn.addEventListener('click', generate);
 
-    // Raccourcis clavier
+    // Shortcuts: Ctrl+Enter generate, L switch language
     document.addEventListener('keydown', (e)=>{
-      if (e.ctrlKey && e.key === 'Enter') { generate(); }
-      if (!e.ctrlKey && (e.key === 'l' || e.key === 'L')) { const values = ['fr','en','ar']; const i = values.indexOf(lang.value); lang.value = values[(i+1)%values.length]; lang.dispatchEvent(new Event('change')); }
-      if (!e.ctrlKey && (e.key === 'p' || e.key === 'P')) { iframe && iframe.focus(); }
+      if (e.ctrlKey && e.key === 'Enter') generate();
+      if (!e.ctrlKey && (e.key === 'l' || e.key === 'L')){
+        const values = ['fr','en','ar'];
+        const i = values.indexOf(lang.value);
+        lang.value = values[(i+1)%values.length];
+        lang.dispatchEvent(new Event('change'));
+      }
     });
+
+    // Build card.html URL with params on click
+    function cardURL(){
+      const params = new URLSearchParams({ sign:sign.value, lang:lang.value, state:state.value, plan:plan.value });
+      const base = openCard.getAttribute('href') || '/card.html';
+      const url = new URL(base, window.location.origin);
+      url.search = params.toString();
+      return url.toString();
+    }
+
+    openCard.addEventListener('click', (e)=>{
+      // keep target="_blank" behaviour, just ensure URL has params
+      openCard.setAttribute('href', cardURL());
+    });
+
+    // Copy helpers
+    $('#copy-html').addEventListener('click', async ()=>{
+      try{ await navigator.clipboard.writeText(out.innerHTML.trim()); alert('HTML copié ✅'); }
+      catch(err){ alert('Impossible de copier'); }
+    });
+    $('#clear-output').addEventListener('click', ()=>{ out.textContent = 'Prêt.'; });
+  })();
   </script>
 </body>
 </html>
