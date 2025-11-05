@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AstroFood Premium Gold — Desktop v16</title>
+  <title>AstroFood Premium Gold — Desktop v16 (Fixed)</title>
   <meta name="theme-color" content="#0f172a" />
   <style>
     :root{
@@ -20,10 +20,7 @@
     }
     *,*:before,*:after{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
-      display:flex; flex-direction:column;
-    }
+    body{margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif; display:flex; flex-direction:column}
     /* --- Topbar --- */
     .topbar{display:flex; align-items:center; justify-content:space-between; padding:.9rem 1.25rem; border-bottom:1px solid var(--border); background:linear-gradient(to bottom, rgba(2,6,23,.9), rgba(2,6,23,.6)); position:sticky; top:0; z-index:30; backdrop-filter: blur(6px)}
     .brand{display:flex; align-items:center; gap:.75rem}
@@ -35,18 +32,16 @@
     /* --- Layout --- */
     .layout{display:grid; grid-template-columns: 340px 1fr; gap:1.25rem; padding:1.25rem; width:100%; max-width:1280px; margin:0 auto; flex:1}
     @media (max-width: 960px){ .layout{grid-template-columns:1fr} }
-
     .panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
 
-    /* --- Sidebar (Controls) --- */
-    .sidebar{padding:1rem 1rem}
+    /* --- Sidebar --- */
+    .sidebar{padding:1rem}
     .sidebar h2{font-size:1rem; margin:.25rem 0 1rem; color:var(--muted)}
     .field{margin-bottom:1rem}
     .field label{display:block; margin-bottom:.4rem; font-size:.9rem; color:var(--muted)}
     select, .btn{width:100%; padding:.7rem .85rem; border-radius:12px; border:1px solid var(--border); background:var(--surface-2); color:var(--text); outline:none}
     select:focus{border-color:var(--accent); box-shadow:0 0 0 4px rgba(56,189,248,.15)}
     .row{display:grid; grid-template-columns: 1fr 1fr; gap:.75rem}
-
     .btn.primary{background:var(--gold); color:#111827; border:none; font-weight:700; cursor:pointer}
     .btn.primary:active{transform:translateY(1px)}
     .hint{font-size:.82rem; color:var(--muted); margin-top:.35rem}
@@ -71,6 +66,9 @@
     .preview iframe{width:100%; height:420px; border:0; display:block; background:#0b1220}
 
     .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.75rem; border:1px solid var(--border); border-bottom-width:3px; padding:.08rem .35rem; border-radius:6px; background:var(--surface-2)}
+
+    /* --- Tests --- */
+    .tests{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.5rem}
   </style>
 </head>
 <body>
@@ -78,7 +76,7 @@
     <div class="brand"><span class="dot"></span><h1>AstroFood Premium Gold</h1></div>
     <div class="actions">
       <span class="badge">Desktop layout</span>
-      <span class="badge">v16 Demo</span>
+      <span class="badge">v16 Fixed</span>
     </div>
   </header>
 
@@ -134,8 +132,13 @@
       </div>
 
       <div class="field">
-        <a class="btn" id="open-digital-card" href="/card.html" target="previewFrame" rel="noopener">📇 Ouvrir la carte digitale</a>
+        <a class="btn" id="open-digital-card" href="#" target="previewFrame" rel="noopener">📇 Ouvrir la carte digitale</a>
         <div class="hint">La carte s'ouvre dans l'aperçu à droite.</div>
+      </div>
+
+      <div class="tests">
+        <button class="tool" id="test-generate">Test : Générer (DEMO)</button>
+        <button class="tool" id="test-card">Test : Carte (Blob)</button>
       </div>
     </aside>
 
@@ -204,13 +207,7 @@
       const ui = T[lg] || T.fr;
       out.textContent = ui.generating;
 
-      const payload = {
-        lang: lg,
-        sign: sign.value,
-        state: state.value,
-        plan: plan.value,
-        mode: (plan.value === 'daily3') ? 'mealplan' : 'recipe'
-      };
+      const payload = { lang: lg, sign: sign.value, state: state.value, plan: plan.value, mode: (plan.value === 'daily3') ? 'mealplan' : 'recipe' };
 
       try{
         if (TEST_MODE){
@@ -232,9 +229,9 @@
         if(!r.ok) throw new Error('HTTP '+r.status);
         const data = await r.json();
         if (payload.mode === 'mealplan'){
-          const b = data?.breakfast || '—';
-          const l = data?.lunch || '—';
-          const d = data?.dinner || '—';
+          const b = data && (data.breakfast || '—');
+          const l = data && (data.lunch || '—');
+          const d = data && (data.dinner || '—');
           out.innerHTML = `<h4>${ui.title_plan}</h4>
             <ul>
               <li><strong>${ui.breakfast}:</strong> ${b}</li>
@@ -242,9 +239,10 @@
               <li><strong>${ui.dinner}:</strong> ${d}</li>
             </ul>`;
         } else {
-          const title = data?.title || ui.title_recipe;
-          const body  = data?.recipe || data?.content || data?.text || '—';
-          out.innerHTML = `<h4>${title}</h4><p>${body}</p>`;
+          const title = (data && (data.title || (data.recipe && data.recipe.title))) || ui.title_recipe;
+          const body  = (data && (data.recipe || data.content || data.text || data.body || data.description)) || '—';
+          const text = typeof body === 'string' ? body : (body.recipe || body.content || '—');
+          out.innerHTML = `<h4>${title}</h4><p>${text}</p>`;
         }
       } catch(err){
         console.error(err);
@@ -254,216 +252,68 @@
 
     btn.addEventListener('click', generate);
 
-    // Raccourcis clavier: Ctrl+Enter pour générer / L pour langue / P pour focus Preview
+    // Raccourcis clavier
     document.addEventListener('keydown', (e)=>{
       if (e.ctrlKey && e.key === 'Enter') { generate(); }
-      if (!e.ctrlKey && (e.key === 'l' || e.key === 'L')) { // cycle langues
-        const values = ['fr','en','ar'];
-        const i = values.indexOf(lang.value);
-        lang.value = values[(i+1)%values.length];
-        lang.dispatchEvent(new Event('change'));
-      }
-      if (!e.ctrlKey && (e.key === 'p' || e.key === 'P')) { iframe?.focus(); }
+      if (!e.ctrlKey && (e.key === 'l' || e.key === 'L')) { const values = ['fr','en','ar']; const i = values.indexOf(lang.value); lang.value = values[(i+1)%values.length]; lang.dispatchEvent(new Event('change')); }
+      if (!e.ctrlKey && (e.key === 'p' || e.key === 'P')) { iframe && iframe.focus(); }
     });
 
-    // Ouvrir la carte digitale dans l'iframe (et synchroniser les query params)
-    function cardURL(){
-      const params = new URLSearchParams({ sign:sign.value, lang:lang.value, state:state.value, plan:plan.value });
-      const base = openCard.getAttribute('href') || '/card.html';
-      const url = new URL(base, window.location.origin);
-      url.search = params.toString();
-      return url.toString();
-    }
-    openCard.addEventListener('click', (e)=>{
-      e.preventDefault();
-      const url = cardURL();
-      openCard.setAttribute('href', url);
-      if (iframe) iframe.src = url; // charge dans l'aperçu
-    });
+    // ===== CARD PREVIEW via BLOB (évite d'inclure un 2e <!DOCTYPE html> dans le même fichier) =====
+    function buildCardHTML(params){
+      // NB: pas d'inner quotes non échappées, pas de retour-ligne non échappé dans les littéraux
+      const html = `<!DOCTYPE html><html lang="${params.lang}"><head><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AstroFood – Carte digitale</title>
+<style>
+:root{--bg: radial-gradient(1200px 600px at 20% -10%, #0f172a 0%, #020617 60%);--surface: rgba(15,23,42,.6);--surface-2: rgba(2,6,23,.65);--border:#1f2937;--text:#e5e7eb;--gold:#FBBF24}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;display:flex;justify-content:center;align-items:flex-start}
+.wrap{width:100%;max-width:980px;margin:2rem 1rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.25);overflow:hidden}
+.head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border)}
+.badge{font-size:.78rem;padding:.25rem .6rem;border:1px solid var(--border);border-radius:999px;opacity:.8}
+.section{border:1px dashed var(--border);border-radius:12px;padding:1rem;background:rgba(2,6,23,.45);margin-top:.8rem}
+.list{margin:0;padding-left:1.1rem}
+.step{display:grid;grid-template-columns:36px 1fr;gap:.6rem;margin:.6rem 0}
+.num{width:36px;height:36px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.btn{padding:.6rem .9rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);text-decoration:none;display:inline-flex;gap:.4rem}
+.price{font-weight:700;color:var(--gold)}
+</style></head><body>
+<div class="wrap"><div class="card"><div class="head"><div><strong id="title">Carte digitale</strong></div>
+<div><span class="badge" id="bSign"></span> <span class="badge" id="bState"></span> <span class="badge" id="bPlan"></span> <span class="badge" id="bLang"></span></div></div>
+<div style="padding:1rem 1.25rem">
+  <div class="section"><h3>Ingrédients</h3><ul class="list" id="ingredients"></ul></div>
+  <div class="section"><h3>Ustensiles</h3><ul class="list" id="equipment"></ul></div>
+  <div class="section"><h3>Étapes</h3><div id="steps"></div></div>
+  <div class="section"><h3>Infos</h3><div class="price" id="price"></div><div id="tips" style="margin-top:.4rem;opacity:.85"></div></div>
+  <div style="margin-top:.8rem"><a class="btn" id="openSelf" target="_blank" rel="noopener">Ouvrir</a></div>
+</div></div></div>
+<script>
+(function(){
+  document.documentElement.lang = ${JSON.stringify(params.lang)};
+  document.documentElement.dir = (${JSON.stringify(params.lang)}==='ar')?'rtl':'ltr';
+  const API_URL = ${JSON.stringify(window.ASTROFOOD_API_URL || '/api/astrofood')};
+  const p = ${JSON.stringify(params)};
+  document.getElementById('bSign').textContent = p.sign;
+  document.getElementById('bState').textContent = p.state;
+  document.getElementById('bPlan').textContent = (p.plan==='daily3')?'3×':'1×';
+  document.getElementById('bLang').textContent = p.lang.toUpperCase();
+  document.getElementById('openSelf').href = location.href;
+  fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lang:p.lang,sign:p.sign,state:p.state,plan:p.plan,mode:'recipe'})})
+    .then(r=>{if(!r.ok) throw new Error('HTTP '+r.status); return r.json();})
+    .then(data=>{
+      const d = data.recipe || data || {};
+      document.getElementById('title').textContent = d.title || 'Recette';
+      document.getElementById('price').textContent = d.price_cfa ? (new Intl.NumberFormat('fr-FR').format(d.price_cfa)+' CFA / recette') : '';
+      const ing = document.getElementById('ingredients'); (d.ingredients||[]).forEach(it=>{ const li=document.createElement('li'); const qty=(it.qty!==undefined?(it.qty+' '):'')+(it.unit||''); li.textContent=[qty.trim(), it.item, it.notes].filter(Boolean).join(' • '); ing.appendChild(li); });
+      const eq = document.getElementById('equipment'); (d.equipment||[]).forEach(t=>{ const li=document.createElement('li'); li.textContent=t; eq.appendChild(li); });
+      const steps = document.getElementById('steps'); (d.steps||[]).forEach((s,i)=>{ const row=document.createElement('div'); row.className='step'; const mins=s.timer_sec? Math.round(s.timer_sec/60):null; row.innerHTML='<div class="num">'+(s.n||i+1)+'</div><div>'+ (s.text||'') + (mins?'<div style="opacity:.75">⏲️ '+mins+' min</div>':'') + (s.heat?'<div style="opacity:.75">🔥 '+s.heat+'</div>':'') + '</div>'; steps.appendChild(row); });
+      const tips = d.tips && d.tips.length ? ('• '+ d.tips.join('\n• ')) : '';
+      document.getElementById('tips').textContent = tips;
+    })
+    .catch(e=>{ document.getElementById('steps').innerHTML = '<p>❌ Impossible de charger la recette.</p>'; console.error(e); });
+})();
 
-    // Copier le HTML de sortie
-    $('#copy-html').addEventListener('click', async ()=>{
-      try{
-        const html = out.innerHTML.trim();
-        await navigator.clipboard.writeText(html);
-        alert('HTML copié ✅');
-      }catch(err){ alert('Impossible de copier'); }
-    });
-
-    $('#clear-output').addEventListener('click', ()=>{ out.textContent = 'Prêt.'; });
-  })();
-  </script>
-</body>
-</html>
-
-
-<!-- ===================
-     CARD.HTML (Carte Digitale – Desktop v16)
-     =================== -->
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AstroFood – Carte Digitale</title>
-  <meta name="theme-color" content="#0f172a" />
-  <style>
-    :root{
-      --bg: radial-gradient(1200px 600px at 20% -10%, #0f172a 0%, #020617 60%);
-      --surface: rgba(15,23,42,.6);
-      --surface-2: rgba(2,6,23,.65);
-      --border: #1f2937;
-      --muted: #94a3b8;
-      --text: #e5e7eb;
-      --gold:#FBBF24;
-      --radius: 16px;
-      --shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
-    *,*:before,*:after{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif; display:flex; justify-content:center; align-items:flex-start}
-    .wrap{width:100%; max-width:820px; margin:2rem 1rem}
-
-    .card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
-    .head{display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid var(--border); background:linear-gradient(to bottom, rgba(2,6,23,.9), rgba(2,6,23,.6))}
-    .sign{display:flex; align-items:center; gap:.8rem}
-    .sign .ico{font-size:1.5rem}
-    .sign h1{margin:0; font-size:1.15rem; letter-spacing:.3px; color:var(--gold)}
-    .badges{display:flex; gap:.5rem; flex-wrap:wrap}
-    .badge{font-size:.78rem; padding:.25rem .6rem; border:1px solid var(--border); border-radius:999px; color:var(--muted); background:var(--surface-2)}
-
-    .body{padding:1.25rem}
-    .grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem}
-    @media(max-width:860px){ .grid{grid-template-columns:1fr} }
-    .section{border:1px dashed var(--border); border-radius:12px; padding:1rem; background:rgba(2,6,23,.45)}
-    .section h3{margin:.2rem 0 .6rem; color:var(--gold)}
-
-    .footer{display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-top:1px solid var(--border); background:rgba(2,6,23,.5)}
-    .btn{padding:.65rem .9rem; border-radius:12px; border:1px solid var(--border); background:var(--surface-2); color:var(--text); cursor:pointer}
-    .btn.primary{background:var(--gold); color:#111827; border:none; font-weight:700}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="card" id="card">
-      <div class="head">
-        <div class="sign">
-          <div class="ico" id="sign-ico">♈︎</div>
-          <h1 id="title">Carte digitale</h1>
-        </div>
-        <div class="badges">
-          <div class="badge" id="badge-sign">—</div>
-          <div class="badge" id="badge-state">—</div>
-          <div class="badge" id="badge-plan">—</div>
-          <div class="badge" id="badge-lang">FR</div>
-        </div>
-      </div>
-
-      <div class="body" id="body">
-        <div class="section" id="single">
-          <h3 id="single-title">Recette</h3>
-          <div id="single-content">Chargement…</div>
-        </div>
-        <div class="grid" id="daily3" style="display:none">
-          <div class="section">
-            <h3 id="h-breakfast">Petit‑déjeuner</h3>
-            <div id="c-breakfast">—</div>
-          </div>
-          <div class="section">
-            <h3 id="h-lunch">Déjeuner</h3>
-            <div id="c-lunch">—</div>
-          </div>
-          <div class="section">
-            <h3 id="h-dinner">Dîner</h3>
-            <div id="c-dinner">—</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer">
-        <div style="opacity:.8">Lien partageable prêt</div>
-        <div>
-          <button class="btn" id="refresh">Rafraîchir</button>
-          <button class="btn" id="copy-url">Copier l’URL</button>
-          <a class="btn primary" id="open-self" href="#" target="_blank" rel="noopener">Ouvrir dans un onglet</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-  (() => {
-    const params = new URLSearchParams(location.search);
-    const lang = (params.get('lang') || 'fr').toLowerCase();
-    const sign = (params.get('sign') || 'aries').toLowerCase();
-    const state = (params.get('state') || 'detox').toLowerCase();
-    const plan = (params.get('plan') || 'single').toLowerCase();
-
-    // i18n minimal
-    const T = {
-      fr:{recipe:'Recette', plan:'Plan de repas', breakfast:'Petit‑déjeuner', lunch:'Déjeuner', dinner:'Dîner', copied:'URL copiée ✅'},
-      en:{recipe:'Recipe', plan:'Meal plan', breakfast:'Breakfast', lunch:'Lunch', dinner:'Dinner', copied:'URL copied ✅'},
-      ar:{recipe:'وصفة', plan:'خطة وجبات', breakfast:'فطور', lunch:'غداء', dinner:'عشاء', copied:'تم نسخ الرابط ✅'}
-    };
-    const ui = T[lang] || T.fr;
-
-    document.documentElement.lang = lang;
-    document.documentElement.dir = (lang==='ar')?'rtl':'ltr';
-
-    // Icônes Zodiac simples
-    const ICON = { aries:'♈︎', taurus:'♉︎', gemini:'♊︎', cancer:'♋︎', leo:'♌︎', virgo:'♍︎', libra:'♎︎', scorpio:'♏︎', sagittarius:'♐︎', capricorn:'♑︎', aquarius:'♒︎', pisces:'♓︎' };
-
-    // Libellés pour badges
-    const SIGN_LABEL = { fr:{aries:'Bélier',taurus:'Taureau',gemini:'Gémeaux',cancer:'Cancer',leo:'Lion',virgo:'Vierge',libra:'Balance',scorpio:'Scorpion',sagittarius:'Sagittaire',capricorn:'Capricorne',aquarius:'Verseau',pisces:'Poissons'},
-                         en:{aries:'Aries',taurus:'Taurus',gemini:'Gemini',cancer:'Cancer',leo:'Leo',virgo:'Virgo',libra:'Libra',scorpio:'Scorpio',sagittarius:'Sagittarius',capricorn:'Capricorn',aquarius:'Aquarius',pisces:'Pisces'},
-                         ar:{aries:'الحمل',taurus:'الثور',gemini:'الجوزاء',cancer:'السرطان',leo:'الأسد',virgo:'العذراء',libra:'الميزان',scorpio:'العقرب',sagittarius:'القوس',capricorn:'الجدي',aquarius:'الدلو',pisces:'الحوت'} };
-
-    // Démo locale – recettes statiques simples selon le signe
-    const DEMO = (key) => {
-      const base = {
-        single:`Shake détox ${key} : citron – gingembre – menthe 🍋🌱`,
-        breakfast:`Overnight oats ${key} – miel & noix`,
-        lunch:`Bowl ${key} – quinoa, mangue, gingembre ✨`,
-        dinner:`Filet de saumon ${key} – citron & légumes rôtis 🌙`
-      };
-      return base;
-    };
-
-    // Remplissage UI
-    document.getElementById('sign-ico').textContent = ICON[sign] || '✦';
-    document.getElementById('title').textContent = (plan==='daily3') ? ui.plan : ui.recipe;
-    document.getElementById('badge-sign').textContent = SIGN_LABEL[lang]?.[sign] || sign;
-    document.getElementById('badge-state').textContent = state;
-    document.getElementById('badge-plan').textContent = (plan==='daily3') ? '3×' : '1×';
-    document.getElementById('badge-lang').textContent = lang.toUpperCase();
-
-    document.getElementById('h-breakfast').textContent = ui.breakfast;
-    document.getElementById('h-lunch').textContent = ui.lunch;
-    document.getElementById('h-dinner').textContent = ui.dinner;
-    document.getElementById('single-title').textContent = ui.recipe;
-
-    const data = DEMO(sign);
-    if (plan === 'daily3'){
-      document.getElementById('single').style.display = 'none';
-      document.getElementById('daily3').style.display = '';
-      document.getElementById('c-breakfast').textContent = data.breakfast;
-      document.getElementById('c-lunch').textContent = data.lunch;
-      document.getElementById('c-dinner').textContent = data.dinner;
-    } else {
-      document.getElementById('single').style.display = '';
-      document.getElementById('daily3').style.display = 'none';
-      document.getElementById('single-content').textContent = data.single;
-    }
-
-    // Actions
-    const urlStr = location.href;
-    document.getElementById('open-self').href = urlStr;
-    document.getElementById('copy-url').addEventListener('click', async ()=>{
-      try{ await navigator.clipboard.writeText(urlStr); alert(ui.copied); }catch(e){ alert('Copy failed'); }
-    });
-    document.getElementById('refresh').addEventListener('click', ()=> location.reload());
-  })();
   </script>
 </body>
 </html>
