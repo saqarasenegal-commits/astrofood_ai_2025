@@ -3,59 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AstroFood – Carte Digitale (Premium Light v16.4)</title>
-  <meta name="theme-color" content="#ffffff" />
+  <title>AstroFood – Carte Digitale (Dark Astral v16.8)</title>
+  <meta name="theme-color" content="#0f172a" />
   <style>
-    :root{ --bg:#fffdf8; --paper:#ffffff; --ink:#0f172a; --muted:#475569; --line:#e5e7eb; --gold:#d4af37; --gold-2:#e8d18b; --accent:#0ea5e9; --pill:#f5f5f5; --radius:16px; --shadow:0 12px 30px rgba(0,0,0,.08); }
+    :root{ --bg:#0b1220; --paper:#0f172a; --ink:#e5e7eb; --muted:#94a3b8; --line:#1f2937; --gold:#FBBF24; --accent:#38bdf8; --radius:16px; --shadow:0 12px 30px rgba(0,0,0,.35); }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0; background:var(--bg); color:var(--ink); font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans"}
-    .wrap{max-width:920px; margin:24px auto; padding:0 16px}
+    body{margin:0; background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+    .wrap{max-width:980px; margin:24px auto; padding:0 16px}
 
     .card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
-    .head{display:flex; gap:16px; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--line); background:linear-gradient(180deg, #fff, #fff9e8 60%)}
+    .head{display:flex; gap:16px; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--line); background:linear-gradient(180deg, #0f172a, #0c162a 60%)}
     .brand{display:flex; gap:10px; align-items:center}
-    .logo{width:38px; height:38px; border-radius:10px; background:conic-gradient(from 0deg, var(--gold), var(--gold-2), var(--gold)); display:flex; align-items:center; justify-content:center; color:#111; font-weight:800}
+    .logo{width:38px; height:38px; border-radius:10px; background:conic-gradient(from 0deg, var(--gold), #e8d18b, var(--gold)); display:flex; align-items:center; justify-content:center; color:#111; font-weight:800}
     .title{margin:0}
     .title small{display:block; font-size:.8rem; color:var(--muted)}
     .badges{display:flex; gap:8px; flex-wrap:wrap}
-    .badge{border:1px solid var(--line); background:var(--pill); padding:6px 10px; border-radius:999px; font-size:.82rem; color:#334155}
+    .badge{border:1px solid var(--line); background:#0b1220; padding:6px 10px; border-radius:999px; font-size:.82rem; color:#cbd5e1}
 
-    .hero{display:grid; grid-template-columns: 140px 1fr 220px; gap:18px; padding:20px 22px; border-bottom:1px solid var(--line)}
+    .hero{display:grid; grid-template-columns: 140px 1fr 240px; gap:18px; padding:20px 22px; border-bottom:1px solid var(--line)}
     @media (max-width: 860px){ .hero{grid-template-columns:1fr; text-align:left} }
-    .thumb{width:100%; aspect-ratio:1/1; border:1px solid var(--line); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:42px; background:#fff}
+    .thumb{width:100%; aspect-ratio:1/1; border:1px solid var(--line); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:42px; background:#0b1220}
     .meta{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px}
-    .chip{border:1px solid var(--line); background:#fafafa; padding:8px 10px; border-radius:12px; font-size:.9rem}
+    .chip{border:1px solid var(--line); background:#0b1220; padding:8px 10px; border-radius:12px; font-size:.9rem}
     .cta{align-self:flex-start; text-align:right}
-    .price{font-weight:800; color:#1f2937; font-size:1.1rem}
+    .price{font-weight:800; color:#f3f4f6; font-size:1.1rem}
     .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; text-decoration:none; border:1px solid var(--line); background:#111827; color:#fff; font-weight:700}
-    .btn.secondary{background:#fff; color:#111827}
+    .btn.secondary{background:#0b1220; color:#e5e7eb}
 
     /* Tabs */
-    .tabs{display:flex; gap:6px; padding:10px 22px; border-bottom:1px solid var(--line); background:#fff}
-    .tab{padding:8px 12px; border:1px solid var(--line); background:#fafafa; border-radius:10px; cursor:pointer; font-weight:600}
+    .tabs{display:flex; gap:6px; padding:10px 22px; border-bottom:1px solid var(--line); background:#0f172a}
+    .tab{padding:8px 12px; border:1px solid var(--line); background:#0b1220; border-radius:10px; cursor:pointer; font-weight:600; color:#cbd5e1}
     .tab[aria-selected="true"]{background:#111827; color:#fff; border-color:#111827}
 
     .grid{display:grid; grid-template-columns:1.2fr .8fr; gap:18px; padding:20px 22px}
     @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
 
-    .section{border:1px solid var(--line); border-radius:14px; padding:16px; background:#fff}
-    .section h3{margin:0 0 10px; color:#111827}
+    .section{border:1px solid var(--line); border-radius:14px; padding:16px; background:#0b1220}
+    .section h3{margin:0 0 10px; color:#f8fafc}
     .list{margin:0; padding-left:1.1rem}
     .list li{margin:.25rem 0}
 
     .steps .row{display:grid; grid-template-columns:36px 1fr; gap:10px; margin:.6rem 0}
-    .steps .num{width:36px; height:36px; border-radius:10px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; background:#fff}
+    .steps .num{width:36px; height:36px; border-radius:10px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; background:#0f172a}
     .note{color:var(--muted); font-size:.92rem}
 
     .nutri{width:100%; border-collapse:collapse; font-size:.92rem}
     .nutri th,.nutri td{border:1px solid var(--line); padding:6px 8px}
-    .nutri th{background:#fcfcfc; text-align:left}
+    .nutri th{background:#0f172a; text-align:left}
 
-    .foot{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 22px; border-top:1px solid var(--line); background:#fff}
-    .sig{font-size:.9rem; color:#64748b}
+    .foot{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 22px; border-top:1px solid var(--line); background:#0f172a}
+    .sig{font-size:.9rem; color:#94a3b8}
 
-    /* Print */
     @media print{ body{background:#fff} .wrap{margin:0; max-width:none; padding:0} .btn{display:none} .foot{border:0} .tabs{display:none} }
   </style>
 </head>
@@ -69,9 +68,10 @@
         </div>
         <div class="badges">
           <span class="badge" id="b-sign">—</span>
+          <span class="badge" id="b-meal">—</span>
           <span class="badge" id="b-state">—</span>
-          <span class="badge" id="b-plan">1×</span>
           <span class="badge" id="b-lang">FR</span>
+          <span class="badge" id="b-base" hidden>—</span>
         </div>
       </header>
 
@@ -90,18 +90,16 @@
         </div>
         <div class="cta">
           <div class="price" id="r-price">—</div>
-          <a class="btn" id="btn-buy" href="#" target="_blank" rel="noopener">🛒 <span data-i18n="buy">Acheter sur LemonSqueezy</span></a>
+          <a class="btn" id="btn-buy" href="#" target="_blank" rel="noopener">🛒 <span data-i18n="buy">Acheter</span></a>
           <div style="margin-top:8px"><a class="btn secondary" id="btn-print" href="#">🖨️ <span data-i18n="print">Imprimer / PDF</span></a></div>
         </div>
       </section>
 
-      <!-- Tabs: Aperçu gratuit / Carte complète -->
       <nav class="tabs" role="tablist" aria-label="Tabs">
         <button class="tab" id="tab-preview" role="tab" aria-selected="true" aria-controls="panel-preview">👀 <span data-i18n="tab_preview">Aperçu gratuit</span></button>
         <button class="tab" id="tab-full" role="tab" aria-selected="false" aria-controls="panel-full">🪪 <span data-i18n="tab_full">Carte complète</span></button>
       </nav>
 
-      <!-- PREVIEW PANEL (gratuit) -->
       <section id="panel-preview" role="tabpanel" aria-labelledby="tab-preview" class="grid">
         <div>
           <div class="section">
@@ -127,7 +125,6 @@
         </aside>
       </section>
 
-      <!-- FULL PANEL (payant) -->
       <section id="panel-full" role="tabpanel" aria-labelledby="tab-full" class="grid" hidden>
         <div>
           <div class="section">
@@ -170,24 +167,25 @@
   <script>
   (function(){
     'use strict';
-    // ====== I18N (UI labels) ======
+    // I18N
     const I18N = {
-      fr:{ buy:'Acheter sur LemonSqueezy', print:'Imprimer / PDF', tab_preview:'Aperçu gratuit', tab_full:'Carte complète', ingredients:'Ingrédients', equipment:'Ustensiles', steps:'Étapes', nutri:'Valeurs nutritionnelles (≈/portion)', allergens:'Allergènes', allergens_subs:'Allergènes & Substitutions', storage:'Conservation & Réchauffage', copy_url:"Copier l’URL", more_items:(n)=>`+${n} éléments supplémentaires…`, more_steps:(n)=>`+${n} étapes supplémentaires…` },
-      en:{ buy:'Buy on LemonSqueezy', print:'Print / PDF', tab_preview:'Free preview', tab_full:'Full card', ingredients:'Ingredients', equipment:'Equipment', steps:'Steps', nutri:'Nutrition (≈/serv.)', allergens:'Allergens', allergens_subs:'Allergens & Substitutions', storage:'Storage & Reheat', copy_url:'Copy URL', more_items:(n)=>`+${n} more items…`, more_steps:(n)=>`+${n} more steps…` },
-      ar:{ buy:'اشترِ من LemonSqueezy', print:'طباعة / PDF', tab_preview:'معاينة مجانية', tab_full:'البطاقة الكاملة', ingredients:'المكوّنات', equipment:'الأدوات', steps:'الخطوات', nutri:'القيم الغذائية (≈/حصّة)', allergens:'المسبّبات', allergens_subs:'المسبّبات والاستبدالات', storage:'الحفظ وإعادة التسخين', copy_url:'نسخ الرابط', more_items:(n)=>`+${n} عناصر إضافية…`, more_steps:(n)=>`+${n} خطوات إضافية…` }
+      fr:{ buy:'Acheter', print:'Imprimer / PDF', tab_preview:'Aperçu gratuit', tab_full:'Carte complète', ingredients:'Ingrédients', equipment:'Ustensiles', steps:'Étapes', nutri:'Valeurs nutritionnelles (≈/portion)', allergens:'Allergènes', allergens_subs:'Allergènes & Substitutions', storage:'Conservation & Réchauffage', copy_url:"Copier l’URL", more_items:(n)=>`+${n} éléments supplémentaires…`, more_steps:(n)=>`+${n} étapes supplémentaires…`, meal:{breakfast:'Petit déjeuner', lunch:'Déjeuner', dinner:'Dîner'} },
+      en:{ buy:'Buy', print:'Print / PDF', tab_preview:'Free preview', tab_full:'Full card', ingredients:'Ingredients', equipment:'Equipment', steps:'Steps', nutri:'Nutrition (≈/serv.)', allergens:'Allergens', allergens_subs:'Allergens & Substitutions', storage:'Storage & Reheat', copy_url:'Copy URL', more_items:(n)=>`+${n} more items…`, more_steps:(n)=>`+${n} more steps…`, meal:{breakfast:'Breakfast', lunch:'Lunch', dinner:'Dinner'} },
+      ar:{ buy:'شراء', print:'طباعة / PDF', tab_preview:'معاينة مجانية', tab_full:'البطاقة الكاملة', ingredients:'المكوّنات', equipment:'الأدوات', steps:'الخطوات', nutri:'القيم الغذائية (≈/حصّة)', allergens:'المسبّبات', allergens_subs:'المسبّبات والاستبدالات', storage:'الحفظ والتسخين', copy_url:'نسخ الرابط', more_items:(n)=>`+${n} عناصر إضافية…`, more_steps:(n)=>`+${n} خطوات إضافية…`, meal:{breakfast:'فطور', lunch:'غداء', dinner:'عشاء'} }
     };
 
-    // ====== Params ======
+    // Params
     const qs = new URLSearchParams(location.search);
     const lang = (qs.get('lang') || 'fr').toLowerCase();
     const sign = (qs.get('sign') || 'aries').toLowerCase();
     const state = (qs.get('state') || 'detox').toLowerCase();
-    const plan = (qs.get('plan') || 'single').toLowerCase();
+    const meal = (qs.get('meal') || 'breakfast').toLowerCase();
+    const base = (qs.get('base') || '').toLowerCase(); // produit africain choisi
     const tabParam = (qs.get('tab') || 'preview').toLowerCase();
 
     document.documentElement.lang = lang; document.documentElement.dir = (lang==='ar')?'rtl':'ltr';
 
-    // ====== Helpers ======
+    // Helpers
     const $ = (id)=>document.getElementById(id);
     const setText = (id, value)=>{ const el=$(id); if(!el) return; el.textContent = value??'—'; };
     function fillList(rootId, arr, limit){
@@ -223,35 +221,27 @@
     }
     function priceCFA(n){ return (typeof n==='number' && isFinite(n)) ? new Intl.NumberFormat('fr-FR').format(n) + ' CFA / recette' : '—'; }
 
-    // ====== UI Translations ======
-    function applyI18N(code){
-      const t = I18N[code] || I18N.fr;
-      document.querySelectorAll('[data-i18n]')?.forEach(el => {
-        const key = el.getAttribute('data-i18n'); const v = t[key]; if (typeof v === 'string') el.textContent = v;
-      });
-    }
-
-    // ====== E‑commerce config ======
-    const LS_URL = window.LEMONSQUEEZY_URL || 'https://astrofood.lemonsqueezy.com/buy/PRODUCT_ID';
-
-    // ====== Header badges ======
+    // Header badges (incl. african base)
     const SIGN_LABEL = { fr:{aries:'Bélier',taurus:'Taureau',gemini:'Gémeaux',cancer:'Cancer',leo:'Lion',virgo:'Vierge',libra:'Balance',scorpio:'Scorpion',sagittarius:'Sagittaire',capricorn:'Capricorne',aquarius:'Verseau',pisces:'Poissons'}, en:{aries:'Aries',taurus:'Taurus',gemini:'Gemini',cancer:'Cancer',leo:'Leo',virgo:'Virgo',libra:'Libra',scorpio:'Scorpio',sagittarius:'Sagittarius',capricorn:'Capricorn',aquarius:'Aquarius',pisces:'Pisces'}, ar:{aries:'الحمل',taurus:'الثور',gemini:'الجوزاء',cancer:'السرطان',leo:'الأسد',virgo:'العذراء',libra:'الميزان',scorpio:'العقرب',sagittarius:'القوس',capricorn:'الجدي',aquarius:'الدلو',pisces:'الحوت'} };
     function setBadges(){
-      const lbl = (SIGN_LABEL[lang]||SIGN_LABEL.fr)[sign] || sign;
-      setText('b-sign', lbl); setText('b-state', state); setText('b-plan', (plan==='daily3') ? '3×':'1×'); setText('b-lang', lang.toUpperCase());
+      const t = I18N[lang]||I18N.fr; const lbl = (SIGN_LABEL[lang]||SIGN_LABEL.fr)[sign] || sign;
+      setText('b-sign', lbl); setText('b-state', state); setText('b-meal', t.meal?.[meal] || meal); setText('b-lang', lang.toUpperCase());
+      if (base){ const bEl=$('b-base'); bEl.hidden=false; bEl.textContent = 'Base: '+base; }
     }
 
-    // ====== API ======
+    // API
     const API_URL = window.ASTROFOOD_API_URL || '/api/astrofood';
     async function fetchRecipe(){
-      const payload = { lang, sign, state, plan, mode: 'recipe' };
+      const payload = base
+        ? { lang, sign, state, meal, base, mode:'recipe_from_product' }
+        : { lang, sign, state, meal, mode: 'recipe' };
       const r = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
       if (!r.ok) throw new Error('HTTP '+r.status);
       const json = await r.json();
       return json.recipe || json; // server-side translation preferred
     }
 
-    // ====== Tabs ======
+    // Tabs
     function selectTab(which){
       const isPreview = (which === 'preview');
       document.getElementById('tab-preview').setAttribute('aria-selected', String(isPreview));
@@ -260,22 +250,23 @@
       document.getElementById('panel-full').hidden = isPreview;
     }
 
-    // ====== Load + Render ======
+    // Load + Render
     async function load(){
-      applyI18N(lang); setBadges();
-      document.getElementById('btn-buy').href = LS_URL;
+      // i18n labels
+      const t = I18N[lang]||I18N.fr; document.querySelectorAll('[data-i18n]')?.forEach(el => { const key = el.getAttribute('data-i18n'); const v = t[key]; if (typeof v === 'string') el.textContent = v; });
+      setBadges();
+      document.getElementById('btn-buy').href = (window.LEMONSQUEEZY_URL || 'https://astrofood.lemonsqueezy.com/buy/PRODUCT_ID');
       try{
         const d = await fetchRecipe();
-        // header
         const emoji = d.image_emoji || d.emoji || '🍽️'; document.getElementById('r-thumb').textContent = emoji;
         setText('r-title', d.title || 'Recette'); setText('r-subtitle', d.subtitle || '');
         setText('c-servings', d.servings? d.servings+' portions':'—'); setText('c-diff', d.difficulty||'—'); setText('c-method', d.method||'—');
         const total = d.time?.total || ((d.time?.prep||0)+(d.time?.cook||0)||null); setText('c-time', total? ('Total: '+total+' min'):'—');
-        setText('c-cuisine', d.cuisine||'—'); setText('c-course', d.course||'—');
+        setText('c-cuisine', d.cuisine||'—'); setText('c-course', d.course|| (I18N[lang].meal?.[meal]||'—') );
         document.getElementById('r-price').textContent = priceCFA(d.price_cfa);
         document.getElementById('r-intro').textContent = d.intro || d.description || '';
 
-        // PREVIEW (free): first 5 ingredients + first 2 steps + nutrition basic + allergens
+        // PREVIEW (free)
         const moreIng = fillList('p-ingredients', d.ingredients, 5);
         document.getElementById('p-ingredients-more').textContent = moreIng>0 ? (I18N[lang].more_items(moreIng)) : '';
         const moreSteps = addSteps('p-steps', d.steps, 2);
@@ -283,7 +274,7 @@
         renderNutrition('p-nutri', d.nutrition||{});
         setText('p-allergens', (d.allergens&&d.allergens.length)? d.allergens.join(', '):'—');
 
-        // FULL (paid): everything
+        // FULL (paid)
         fillList('r-ingredients', d.ingredients);
         fillList('r-equipment', d.equipment, undefined);
         addSteps('r-steps', d.steps);
@@ -295,7 +286,7 @@
           setText('r-storage', arr.join(' • ') || '—');
         } else { setText('r-storage','—'); }
 
-        // Select tab (preview by default or ?tab=full)
+        // Select tab
         selectTab(tabParam==='full' ? 'full' : 'preview');
       } catch(e){
         console.error(e);
@@ -303,13 +294,13 @@
       }
     }
 
-    // ====== Events ======
+    // Events
     document.getElementById('btn-copy-url').addEventListener('click', async (e)=>{ e.preventDefault(); try{ await navigator.clipboard.writeText(location.href); alert('URL copiée ✅'); }catch(_){ alert('Impossible de copier'); }});
     document.getElementById('btn-print').addEventListener('click', (e)=>{ e.preventDefault(); window.print(); });
     document.getElementById('tab-preview').addEventListener('click', ()=> selectTab('preview'));
     document.getElementById('tab-full').addEventListener('click', ()=> selectTab('full'));
 
-    // ====== Init ======
+    // Init
     load();
   })();
   </script>
