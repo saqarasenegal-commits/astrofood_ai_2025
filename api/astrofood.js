@@ -1,15 +1,13 @@
-
 export default async function handler(req, res) {
   // --- CORS ---
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(204).end();
-  }
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Use POST" });
 
-  // --- MODE DEBUG ---
+  // --- DEBUG ---
   if (req.method === "GET" && (req.url.includes("debug=1") || req.query?.debug === "1")) {
     const apiKey = process.env.OPENAI_API_KEY;
     return res.status(200).json({
@@ -19,67 +17,71 @@ export default async function handler(req, res) {
       env: process.env.VERCEL_ENV || "unknown",
     });
   }
-  if (body.mode === 'advice') {
-  // Retourne des conseils pour le signe + état (do/avoid dans la bonne langue)
-  return res.status(200).json({
-    advice: {
-      do:    lang==='ar' ? ['...'] : lang==='en' ? ['Hydrate well', 'Leafy greens'] : ['Bien s’hydrater', 'Légumes verts'],
-      avoid: lang==='ar' ? ['...'] : lang==='en' ? ['Ultra-processed', 'Excess sugar'] : ['Ultras transformés', 'Excès de sucre']
-    }
-  });
-}
-
-  if (body.mode === 'recipe_from_product') {
-     const base = (body.base || '').toLowerCase(); // ex. 'fonio', 'gombo', ...
-  // Compose une recette courte basée sur l’ingrédient de base
-     return res.status(200).json({
-      recipe: {
-        title: lang==='en' ? `Chef's ${base} bowl` :
-             lang==='ar' ? `طبق ${base} من الشيف` :
-                            `Bol de ${base} du Chef`,
-        intro: lang==='en' ? `A simple ${base}-based recipe tuned for ${body.sign}/${body.state}.` :
-             lang==='ar' ? `وصفة بسيطة تعتمد على ${base} مهيّأة لـ ${body.sign}/${body.state}.` :
-                            `Recette simple à base de ${base} adaptée à ${body.sign}/${body.state}.`,
-      servings: 2,
-      time: { prep: 10, cook: 15, total: 25 },
-      difficulty: 'Facile',
-      method: 'Poêle',
-      ingredients: [
-        { item: base, qty: 200, unit: 'g' },
-        { item: lang==='en' ? 'Onion' : lang==='ar' ? 'بصل' : 'Oignon', qty: 1 },
-        { item: lang==='en' ? 'Garlic' : lang==='ar' ? 'ثوم' : 'Ail', qty: 2, unit: 'gousses' },
-        { item: lang==='en' ? 'Oil' : lang==='ar' ? 'زيت' : 'Huile', qty: 1, unit: 'cs' },
-      ],
-      steps: [
-        { n:1, text: lang==='en' ? 'Prep and dice.' : lang==='ar' ? 'حضّر وقطّع.' : 'Préparer et couper.', timer_sec: 0 },
-        { n:2, text: lang==='en' ? 'Sauté for 2 min.' : lang==='ar' ? 'قلِّ لمدة دقيقتين.' : 'Saisir 2 min.', timer_sec: 120, heat:'fort' },
-        { n:3, text: lang==='en' ? `Add ${base} and cook 8 min.` : lang==='ar' ? `أضِف ${base} واطهه 8 دقائق.` : `Ajouter ${base} et cuire 8 min.`, timer_sec: 480, heat:'moyen' }
-      ],
-      nutrition: { kcal: 380, protein_g: 10, carb_g: 55, fat_g: 12 },
-      substitutions: [ lang==='en' ? 'Oil → ghee' : lang==='ar' ? 'الزيت → السمن' : 'Huile → beurre clarifié' ],
-      image_emoji: '🍲'
-    }
-  });
-}
-
-  
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Use POST" });
-  }
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return res.status(200).json({
       ok: false,
-      text: "⚠️ Aucune clé API détectée dans les variables d'environnement (OPENAI_API_KEY).",
+      text: "⚠️ Aucune clé API détectée (OPENAI_API_KEY manquante).",
     });
   }
 
-  // --- Lecture du corps de la requête ---
-  const { sign = "Poissons", lang = "fr" } = req.body || {};
+  // --- Lecture du corps ---
+  const { sign = "Poissons", lang = "fr", mode = "recipe", state, base } = req.body || {};
 
+  // 🧠 MODE 1 : CONSEIL NUTRITIONNEL
+  if (mode === "advice") {
+    const t = lang === "en"
+      ? { do: ["Hydrate well", "Eat leafy greens"], avoid: ["Excess sugar", "Ultra-processed foods"] }
+      : lang === "ar"
+      ? { do: ["اشرب الماء جيدًا", "الخضروات الورقية"], avoid: ["السكريات الزائدة", "الأطعمة المصنعة"] }
+      : { do: ["Bien s’hydrater", "Légumes verts"], avoid: ["Excès de sucre", "Produits ultra-transformés"] };
+
+    return res.status(200).json({ advice: t });
+  }
+
+  // 👩‍🍳 MODE 2 : RECETTE PAR PRODUIT AFRICAIN
+  if (mode === "recipe_from_product") {
+    const product = (base || "").toLowerCase();
+    const recipe = {
+      title:
+        lang === "en"
+          ? `Chef's ${product} Bowl`
+          : lang === "ar"
+          ? `طبق ${product} من الشيف`
+          : `Bol de ${product} du Chef`,
+      intro:
+        lang === "en"
+          ? `A simple ${product}-based recipe tuned for ${sign}/${state}.`
+          : lang === "ar"
+          ? `وصفة بسيطة تعتمد على ${product} مهيّأة لـ ${sign}/${state}.`
+          : `Recette simple à base de ${product} adaptée à ${sign}/${state}.`,
+      ingredients: [
+        { item: product, qty: 200, unit: "g" },
+        { item: lang === "fr" ? "Oignon" : "Onion", qty: 1 },
+        { item: lang === "fr" ? "Ail" : "Garlic", qty: 2, unit: "gousses" },
+        { item: lang === "fr" ? "Huile" : "Oil", qty: 1, unit: "cs" },
+      ],
+      steps: [
+        { n: 1, text: lang === "fr" ? "Préparer et couper." : "Prep and dice.", timer_sec: 0 },
+        { n: 2, text: lang === "fr" ? "Faire revenir 2 min." : "Sauté for 2 min.", timer_sec: 120 },
+        {
+          n: 3,
+          text:
+            lang === "fr"
+              ? `Ajouter ${product} et cuire 8 min.`
+              : `Add ${product} and cook 8 min.`,
+          timer_sec: 480,
+        },
+      ],
+      substitutions: [lang === "fr" ? "Huile → beurre clarifié" : "Oil → ghee"],
+    };
+
+    return res.status(200).json({ recipe });
+  }
+
+  // 🔮 AUTRES MODES (recettes normales) => via OpenAI
   try {
-    // ✅ Endpoint compatible avec sk-proj
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -87,7 +89,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini", // tu peux essayer "gpt-4o" si ce modèle n'est pas dispo
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
@@ -96,49 +98,37 @@ export default async function handler(req, res) {
           },
           {
             role: "user",
-            content: `Prépare une recette complète adaptée au signe ${sign} en ${lang}.`,
+            content: `Prépare une recette complète adaptée au signe ${sign} (${lang}).`,
           },
         ],
         max_tokens: 300,
       }),
     });
 
-    // 🟠 Erreur claire d’OpenAI
-  const data = await response.json();
-
-if (data.error) {
-  // quota dépassé → message clair + fallback local pour ne pas casser l'UX
-  if (data.error.code === "insufficient_quota") {
-    const local = `🔒 Quota OpenAI épuisé.
-Recette de secours pour ${sign} (${lang}) :
+    const data = await response.json();
+    if (data.error) {
+      if (data.error.code === "insufficient_quota") {
+        return res.status(200).json({
+          ok: false,
+          text: `🔒 Quota OpenAI épuisé.
+Recette de secours pour ${sign} :
 • Titre : Yassa veggie citron & bissap
 • Ingrédients : oignons, citron, moutarde, poivron, piment doux, huile
-• Préparation : mariner 20 min, saisir 6–8 min, déglacer, mijoter 10 min. Servir avec riz/miélé de mil.`;
-    return res.status(200).json({ ok: false, text: local });
-  }
-  return res.status(200).json({ ok: false, text: "❌ OpenAI : " + data.error.message });
-}
+• Préparation : mariner 20 min, saisir 6–8 min, déglacer, mijoter 10 min.`,
+        });
+      }
+      return res.status(200).json({ ok: false, text: "❌ OpenAI : " + data.error.message });
+    }
 
-    // 🟢 Récupération du texte
-    const text =
-      data?.choices?.[0]?.message?.content ||
-      data?.output_text ||
-      null;
-
+    const text = data?.choices?.[0]?.message?.content || null;
     if (!text) {
       return res.status(200).json({
         ok: false,
-        text:
-          "⚠️ OpenAI a répondu sans texte lisible.\n" +
-          `Recette de secours : jus de bouye + yassa veggie pour ${sign} (${lang}).`,
+        text: "⚠️ Réponse vide d’OpenAI.",
       });
     }
 
-    // ✅ Réponse finale
-    return res.status(200).json({
-      ok: true,
-      text,
-    });
+    return res.status(200).json({ ok: true, text });
   } catch (err) {
     return res.status(200).json({
       ok: false,
