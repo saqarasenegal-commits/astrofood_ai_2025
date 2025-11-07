@@ -1,41 +1,39 @@
-// api/chef-ai.js
-// Si ton runtime n'a pas fetch global, décommente la ligne suivante:
+// api/chef-ai.js  (DEBUG version - remove after troubleshooting)
+// Si ton runtime n'a pas fetch global, décommente l'import suivant:
 // import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
-  // Autoriser CORS simple (adaptable : en prod restreins le domaine)
+  // CORS permissif pour debug (en prod, restreindre au domaine)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(204).end();
-
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Log simple pour vérifier si la variable d'environnement est disponible
+  // (NE PAS LOGUER LA VALEUR DE LA CLE)
+  console.log('DEBUG: OPENAI_API_KEY present?', !!process.env.OPENAI_API_KEY);
 
   try {
     const { prompt, sign, meal, lang } = req.body || {};
     if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
 
-    // Construire un prompt strict pour forcer la réponse JSON
-    const system = `You are Chef-AI, an expert chef and nutritionist. Always respond in VALID JSON ONLY (no extra text).
-Return a JSON object with exactly two top-level keys:
-- "answer": short text (1-2 sentences) as a chat reply to the user's question.
-- "recipe": an object with fields { "title", "desc", "ingredients" (array), "preparation", "cook", "calories", "img" }.
-If some fields are unknown, set them to an empty string or empty array. Use the language requested in the 'lang' parameter for both 'answer' and 'recipe' text.
-Do NOT include any commentary, only the JSON object.`;
+    const system = `You are Chef-AI. Reply with VALID JSON ONLY: { "answer": "...", "recipe": { "title":"", "desc":"", "ingredients":[], "preparation":"", "cook":"", "calories":"", "img":"" } }.
+Use the language specified in 'lang'. Do NOT include extra text outside the JSON.`;
 
     const userContent = `User prompt: """${prompt}"""
 Sign: ${sign || 'unknown'}
 Meal: ${meal || 'unknown'}
 Lang: ${lang || 'fr'}
-Return the JSON object with recipe adapted to the sign and meal.`;
+Return the JSON object as requested.`;
 
-    // Optional: set a server-side timeout controller for fetch
+    // Timeout controller
     const controller = new AbortController();
-    const timeoutMs = 20000; // 20s
-    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    const TIMEOUT_MS = 20000;
+    const to = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-    // Call OpenAI Chat Completions endpoint (adjust model / endpoint as needed)
+    // Appel à OpenAI
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -43,7 +41,7 @@ Return the JSON object with recipe adapted to the sign and meal.`;
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini', // ou le modèle que tu préfères
+        model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: userContent }
@@ -54,49 +52,46 @@ Return the JSON object with recipe adapted to the sign and meal.`;
       signal: controller.signal
     });
 
-    clearTimeout(timeout);
+    clearTimeout(to);
 
+    // Si erreur OpenAI -> renvoyer le détail (utile en debug)
     if (!openaiRes.ok) {
+      // récupère texte d'erreur retourné par OpenAI
       const text = await openaiRes.text().catch(() => '');
-      console.error('OpenAI error', openaiRes.status, text);
-      return res.status(502).json({ error: `OpenAI error ${openaiRes.status}` });
-    }
-
-    const json = await openaiRes.json();
-
-    // Extraire le texte renvoyé par le modèle
-    const raw = json.choices?.[0]?.message?.content ?? json.choices?.[0]?.text ?? null;
-    if (!raw) {
-      return res.status(500).json({ error: 'No content from OpenAI' });
-    }
-
-    // Tenter de parser JSON strict depuis la réponse
-    let parsed;
-    try {
-      // Parfois le modèle renvoie du code markdown; on nettoie
-      const firstBrace = raw.indexOf('{');
-      const lastBrace = raw.lastIndexOf('}');
-      const candidate = (firstBrace !== -1 && lastBrace !== -1) ? raw.slice(firstBrace, lastBrace + 1) : raw;
-      parsed = JSON.parse(candidate);
-    } catch (parseErr) {
-      // Si parsing échoue, on renvoie le texte dans answer pour debug, et recipe vide
-      console.warn('JSON parse failed, returning raw text as answer', parseErr);
-      return res.status(200).json({
-        answer: String(raw).slice(0, 1500), // tronqué si trop long
-        recipe: {
-          title: '',
-          desc: '',
-          ingredients: [],
-          preparation: '',
-          cook: '',
-          calories: '',
-          img: ''
-        },
-        warning: 'failed_to_parse_json'
+      console.error('DEBUG: OpenAI returned non-OK', openaiRes.status, text);
+      // renvoie l'erreur au client pour debugging (temporarily)
+      return res.status(502).json({
+        error: `OpenAI error ${openaiRes.status}`,
+        details: text || 'no details'
       });
     }
 
-    // Valider & normaliser parsed.recipe si nécessaire
+    const openaiJson = await openaiRes.json();
+    const raw = openaiJson.choices?.[0]?.message?.content ?? openaiJson.choices?.[0]?.text ?? null;
+    if (!raw) {
+      console.error('DEBUG: OpenAI returned empty content', openaiJson);
+      return res.status(500).json({ error: 'No content from OpenAI', debug: openaiJson });
+    }
+
+    // Try parse JSON out of the model response
+    let parsed;
+    try {
+      const first = raw.indexOf('{');
+      const last = raw.lastIndexOf('}');
+      const candidate = (first !== -1 && last !== -1) ? raw.slice(first, last + 1) : raw;
+      parsed = JSON.parse(candidate);
+    } catch (parseErr) {
+      console.warn('DEBUG: JSON parse failed', parseErr);
+      // renvoyer le texte brut dans 'answer' pour debugging
+      return res.status(200).json({
+        answer: String(raw).slice(0, 1500),
+        recipe: { title: '', desc: '', ingredients: [], preparation: '', cook: '', calories: '', img: '' },
+        warning: 'failed_to_parse_json',
+        debug_raw: String(raw).slice(0, 5000) // limit size
+      });
+    }
+
+    // Normaliser recipe
     const recipe = parsed.recipe || {};
     const normalizedRecipe = {
       title: recipe.title || '',
@@ -108,14 +103,13 @@ Return the JSON object with recipe adapted to the sign and meal.`;
       img: recipe.img || ''
     };
 
-    // Fournir la réponse finale attendue côté client
     return res.status(200).json({
       answer: parsed.answer || '',
       recipe: normalizedRecipe
     });
 
   } catch (err) {
-    console.error('Server error', err);
+    console.error('DEBUG: server error', err);
     if (err.name === 'AbortError') {
       return res.status(504).json({ error: 'OpenAI request timed out' });
     }
