@@ -65,7 +65,71 @@
         <div class="brand">
           <div class="logo" aria-hidden="true">★</div>
           <h1 class="title" id="r-title">Carte Recette <small id="r-subtitle">—</small></h1>
+        </div> 
+        <!-- Container principal -->
+<div id="chef-ai-app" style="font-family: system-ui, Arial, sans-serif; max-width:900px; margin:20px auto;">
+
+  <!-- Contrôles -->
+  <div style="display:flex; gap:8px; align-items:center; margin-bottom:12px;">
+    <select id="langSelect">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+      <option value="ar">العربية</option>
+    </select>
+
+    <select id="mealSelect">
+      <option value="breakfast">Petit-déjeuner</option>
+      <option value="lunch">Déjeuner</option>
+      <option value="dinner">Dîner</option>
+    </select>
+
+    <input id="signInput" placeholder="Signe (ex: Aries)" style="padding:6px;" />
+
+    <button id="generateBtn">Générer recette</button>
+    <button id="downloadBtn" disabled>Exporter PNG</button>
+    <span id="status" style="margin-left:10px;color:#666;"></span>
+  </div>
+
+  <!-- La carte digitale (sera capturée par html2canvas) -->
+  <div id="recipeCard" aria-live="polite" style="
+      background: linear-gradient(180deg,#fff 0%, #f9fafb 100%);
+      border-radius:14px; padding:18px; box-shadow:0 6px 24px rgba(10,10,10,0.08);
+      display:flex; gap:16px; align-items:flex-start;">
+    
+    <!-- Colonne image -->
+    <div style="flex:0 0 220px;">
+      <div id="recipeImageWrapper" style="width:220px; height:160px; border-radius:10px; overflow:hidden; background:#eee; display:flex;align-items:center;justify-content:center;">
+        <img id="recipeImage" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none;" />
+        <div id="imagePlaceholder" style="color:#666;padding:8px;text-align:center;">Pas d'image</div>
+      </div>
+    </div>
+
+    <!-- Colonne texte -->
+    <div style="flex:1; min-width:0;">
+      <h2 id="recipeTitle" style="margin:0 0 8px 0; font-size:20px;"></h2>
+      <p id="recipeDesc" style="margin:0 0 12px 0; color:#444;"></p>
+      
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <div style="min-width:220px;">
+          <h4 style="margin:0 0 6px 0;">Ingrédients</h4>
+          <ul id="ingredientsList" style="margin:0 0 12px 18px; color:#333;"></ul>
         </div>
+
+        <div style="flex:1; min-width:220px;">
+          <h4 style="margin:0 0 6px 0;">Préparation</h4>
+          <p id="preparationText" style="margin:0 0 12px 0; color:#333;"></p>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; align-items:center; margin-top:8px;">
+        <div style="font-size:13px; color:#666;">Cuisson: <strong id="cookText">—</strong></div>
+        <div style="font-size:13px; color:#666;">Calories: <strong id="calText">—</strong></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
         <div class="badges">
           <span class="badge" id="b-sign">—</span>
           <span class="badge" id="b-meal">—</span>
