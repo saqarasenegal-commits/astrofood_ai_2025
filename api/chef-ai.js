@@ -1,5 +1,6 @@
 // api/chef-ai.js  (Production - clean)
 // If your runtime doesn't have global fetch, uncomment node-fetch import:
+console.log("🔑 KEY PRESENT ?", !!process.env.OPENAI_API_KEY);
 
 export default async function handler(req, res) {
   // Basic CORS for same-origin deployments; tighten in production if needed
