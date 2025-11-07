@@ -661,20 +661,29 @@
    * Chef-AI placeholder behaviour (local demo)
    * Replace the fetch with your endpoint to use real AI responses.
    ***************************************************************************/
-  chefSend.addEventListener('click', async () => {
-    const q = chefQuery.value.trim();
-    if(!q){ chefResp.textContent = UI_TEXT[uiLangEl.value].lblChef + ' — écris une question.'; return; }
-    chefResp.textContent = uiLangEl.value === 'fr' ? 'Chef-AI réfléchit…' : (uiLangEl.value === 'en' ? 'Chef-AI thinking…' : 'الشيف يفكر…');
-   
-try {
-  // disable UI while waiting
+ // ---------------------------
+// Chef-AI: appel réel au backend (/api/chef-ai)
+// Remplace l'ancien chefSend.addEventListener(...) par ce bloc.
+// Variables attendues pré-existantes dans la page :
+// chefSend, chefResp, uiLangEl, signEl, mealEl, langRecipeEl, renderRecipeToUI
+// ---------------------------
+
+chefSend.addEventListener('click', async () => {
+  const q = (chefQuery.value || '').trim();
+  if (!q) {
+    chefResp.textContent = uiLangEl.value === 'fr' ? 'Écris une question pour le Chef-AI.' : (uiLangEl.value === 'en' ? 'Write a question for Chef-AI.' : 'اكتب سؤالاً للشيف.');
+    return;
+  }
+
+  // URL de ton endpoint (modifie si besoin)
+  const CHEF_API_URL = '/api/chef-ai';
+
+  // UI: disable while waiting
   chefSend.disabled = true;
-  chefResp.textContent = uiLangEl.value === 'ar' ? 'الشيف يفكر…' : (uiLangEl.value === 'fr' ? 'Chef-AI réfléchit…' : 'Chef-AI thinking…');
+  const waitingText = uiLangEl.value === 'fr' ? 'Chef-AI réfléchit…' : (uiLangEl.value === 'en' ? 'Chef-AI thinking…' : 'الشيف يفكر…');
+  chefResp.textContent = waitingText;
 
-  // timeout (optionnel) pour éviter d'attendre indéfiniment
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 20000); // 20s timeout
-
+  // Préparer payload
   const payload = {
     prompt: q,
     sign: signEl.value,
@@ -682,50 +691,100 @@ try {
     lang: langRecipeEl.value
   };
 
-  const res = await fetch('/api/chef-ai', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-    signal: controller.signal
-  });
+  // Timeout controller
+  const controller = new AbortController();
+  const TIMEOUT_MS = 20000; // 20s
+  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-  clearTimeout(timeoutId);
+  try {
+    const res = await fetch(CHEF_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller.signal
+    });
 
-  if (!res.ok) {
-    const text = await res.text().catch(()=>null);
-    throw new Error(`Erreur serveur ${res.status}${text ? ' — ' + text : ''}`);
-  }
+    clearTimeout(timeoutId);
 
-  const data = await res.json();
-
-  // Attends un JSON comme { answer: "...", recipe: {...} }
-  if (data.answer) {
-    chefResp.textContent = data.answer;
-  } else if (data.error) {
-    chefResp.textContent = data.error;
-  } else {
-    chefResp.textContent = 'Pas de réponse du Chef-AI.';
-  }
-
-  // si l'API renvoie aussi une recette structurée, on peut l'afficher:
-  if (data.recipe) {
-    renderRecipeToUI(data.recipe, uiLangEl.value); // utilise la fonction existante pour remplir la carte
-  }
-
-} catch (err) {
-  if (err.name === 'AbortError') {
-    chefResp.textContent = uiLangEl.value === 'fr' ? 'Délai dépassé (timeout).' : 'Request timed out.';
-  } else {
-    chefResp.textContent = 'Erreur Chef-AI: ' + (err.message || err);
-  }
-  console.error('Chef-AI fetch error', err);
-} finally {
-  chefSend.disabled = false;
-
-
+    if (!res.ok) {
+      // show server error message (try to read body)
+      let text = '';
+      try { text = await res.text(); } catch(_) { text = ''; }
+      chefResp.textContent = (uiLangEl.value === 'fr' ? 'Erreur serveur: ' : (uiLangEl.value === 'en' ? 'Server error: ' : 'خطأ في الخادم: ')) + `${res.status}${text ? ' — ' + text : ''}`;
+      return;
     }
 
-  });
+    // parse JSON (defensive)
+    let data;
+    try {
+      data = await res.json();
+    } catch (e) {
+      const txt = await res.text().catch(()=>null);
+      chefResp.textContent = uiLangEl.value === 'fr' ? 'Réponse invalide du serveur.' : (uiLangEl.value === 'en' ? 'Invalid server response.' : 'استجابة خادم غير صالحة.');
+      console.warn('Invalid JSON from chef API:', txt || e);
+      return;
+    }
+
+    // Handle warnings or non-structured responses
+    if (data.warning === 'failed_to_parse_json' && data.answer) {
+      // server couldn't parse model JSON -> show the answer and leave recipe empty
+      chefResp.textContent = data.answer;
+      return;
+    }
+
+    // If answer present, show it
+    if (data.answer) {
+      chefResp.textContent = data.answer;
+    } else {
+      chefResp.textContent = uiLangEl.value === 'fr' ? 'Pas de réponse du Chef-AI.' : (uiLangEl.value === 'en' ? 'No answer from Chef-AI.' : 'لا توجد إجابة من الشيف.');
+    }
+
+    // If a structured recipe is provided, render it into the UI/card
+    if (data.recipe && typeof data.recipe === 'object') {
+      // Normaliser le format minimal attendu
+      const r = {
+        title: data.recipe.title || '',
+        desc: data.recipe.desc || '',
+        ingredients: Array.isArray(data.recipe.ingredients) ? data.recipe.ingredients : (data.recipe.ingredients ? [String(data.recipe.ingredients)] : []),
+        preparation: data.recipe.preparation || '',
+        cook: data.recipe.cook || '',
+        calories: data.recipe.calories || '',
+        img: data.recipe.img || ''
+      };
+
+      // Si l'API renvoie seulement une image relative ou un tag, on peut le remplacer/sanitiser ici
+      // Exemple: si img vide -> laisser la placeholder actuelle; sinon remplacer
+      if (r.img) {
+        // safe: si l'image fournie n'est pas une URL complète, on ignore (ou on pourrait préfixer)
+        try {
+          const u = new URL(r.img, window.location.href);
+          r.img = u.href;
+        } catch (_) {
+          // non-URL -> on laisse r.img tel quel (le renderRecipeToUI pourra gérer)
+        }
+      }
+
+      // Utilise la fonction existante pour afficher la recette
+      try {
+        renderRecipeToUI(r, uiLangEl.value);
+      } catch (err) {
+        console.warn('renderRecipeToUI failed', err);
+      }
+    }
+
+  } catch (err) {
+    // Timeout / network / abort
+    if (err.name === 'AbortError') {
+      chefResp.textContent = uiLangEl.value === 'fr' ? 'Délai dépassé (timeout).' : (uiLangEl.value === 'en' ? 'Request timed out.' : 'انتهت مهلة الطلب.');
+    } else {
+      chefResp.textContent = (uiLangEl.value === 'fr' ? 'Erreur Chef-AI: ' : (uiLangEl.value === 'en' ? 'Chef-AI error: ' : 'خطأ الشيف: ')) + (err.message || err);
+    }
+    console.error('Chef-AI client error', err);
+  } finally {
+    chefSend.disabled = false;
+    clearTimeout(timeoutId);
+  }
+});
 
   /**************************************************************************
    * Utility: escape and small idempotent init
