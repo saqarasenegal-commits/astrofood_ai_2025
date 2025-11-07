@@ -1,25 +1,26 @@
 
-// api/chef-ai.js (debug version) - REMPLACE TEMPORAIREMENT
-// api/chef-ai.js (check env - minimal)
-export default function handler(req, res) {
-  console.log(">>> minimal-check called");
+// api/chef-ai.js (openai quick test)
+export default async function handler(req, res) {
+  console.log(">>> openai-quicktest called");
   const key = process.env.OPENAI_API_KEY;
-  console.log("🔑 KEY_PRESENT?", !!key, "len:", key ? key.length : 0);
-  res.setHeader("Content-Type","application/json");
-  return res.status(200).json({ ok: true, key_present: !!key, key_len: key ? key.length : 0 });
+  if (!key) {
+    console.error("NO KEY IN ENV");
+    return res.status(500).json({ ok:false, err:"NO_KEY" });
+  }
+  try {
+    const r = await fetch("https://api.openai.com/v1/models", {
+      headers: { "Authorization": `Bearer ${key}` }
+    });
+    const text = await r.text();
+    console.log("OpenAI status:", r.status);
+    console.log("OpenAI body (first200):", text.slice(0,200));
+    return res.status(200).json({ ok:true, status: r.status, body_preview: text.slice(0,300) });
+  } catch (e) {
+    console.error("CALL ERROR:", e);
+    return res.status(500).json({ ok:false, err: String(e) });
+  }
 }
 
-  // parse body safely
-  let body = {};
-  try { body = req.body && Object.keys(req.body).length ? req.body : (await (async () => { try { return JSON.parse(await new Promise(r => { let s=''; req.on('data',c=>s+=c); req.on('end', ()=>r(s)); })) } catch(e){ return {}; }})()) : {}; }
-  catch(e){ console.warn("⚠️ parse body failed", e); body = {}; }
-
-  console.log("📥 Received body keys:", Object.keys(body));
-
-  // Minimal prompt check
-  if (!body.prompt) {
-    return res.status(400).json({ error: "Missing prompt" });
-  }
 
   try {
     console.log("🌍 Calling OpenAI...");
