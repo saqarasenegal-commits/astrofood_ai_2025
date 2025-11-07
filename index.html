@@ -3,25 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AstroFood Premium Gold — Chef-AI (v16)</title>
+  <title>AstroFood Premium Gold — Chef-AI (vFinal)</title>
   <meta name="description" content="AstroFood Premium Gold: recettes IA par signe (FR/EN/AR), Chef-AI, carte digitale, QR WhatsApp." />
   <meta name="theme-color" content="#0f172a" />
   <style>
     :root{
-      --gold: #FBBF24;
-      --bg1: #0f172a;
-      --bg2: #020617;
-      --glass: rgba(255,255,255,0.04);
-      --muted: #cbd5e1;
-      --round: 12px;
-      --maxw: 980px;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Cairo", sans-serif;
+      --gold:#FBBF24; --bg1:#0f172a; --bg2:#020617; --glass:rgba(255,255,255,0.04);
+      --muted:#cbd5e1; --round:12px; --maxw:980px; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Cairo", sans-serif;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background: radial-gradient(circle at 20% 10%, #091028 0%, var(--bg1) 30%, var(--bg2) 100%); color:#fff;}
-    .wrap{max-width:var(--maxw);margin:28px auto;padding:24px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));box-shadow:0 6px 30px rgba(2,6,23,0.6);}
+    html,body{height:100%;margin:0;background:radial-gradient(circle at 20% 10%, #091028 0%, var(--bg1) 30%, var(--bg2) 100%); color:#fff}
+    .wrap{max-width:var(--maxw);margin:28px auto;padding:24px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));box-shadow:0 6px 30px rgba(2,6,23,0.6)}
     header{display:flex;align-items:center;gap:16px}
-    .logo {width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#f59e0b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#041025}
+    .logo{width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#f59e0b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#041025}
     h1{margin:0;font-size:20px}
     .top-right{margin-left:auto;font-size:13px;color:var(--muted)}
     .grid{display:grid;grid-template-columns:330px 1fr;gap:18px;margin-top:18px}
@@ -29,7 +23,7 @@
     label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
     select, button, .chip, input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff}
     .row{display:flex;gap:8px}
-    .row > *{flex:1}
+    .row>*{flex:1}
     .muted{color:var(--muted);font-size:13px}
     .btn-primary{background:linear-gradient(90deg,var(--gold),#f59e0b);color:#041025;font-weight:600;border:none;cursor:pointer}
     .btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.06);cursor:pointer}
@@ -37,18 +31,14 @@
     .card-preview{padding:12px;border-radius:10px;background:linear-gradient(90deg, rgba(11,19,40,0.6), rgba(3,6,10,0.4));min-height:260px}
     .card-title{font-weight:700;color:var(--gold);font-size:16px}
     .qr{width:88px;height:88px;border-radius:8px;background:#fff;padding:6px}
-    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
-    .lang-row{display:flex;gap:8px}
-    .chip{cursor:pointer;text-align:center}
-    .chip.active{outline:2px solid rgba(255,255,255,0.06);box-shadow:0 6px 20px rgba(0,0,0,0.4)}
     .card-image{width:100%;height:140px;border-radius:8px;object-fit:cover;background:#061022;margin-bottom:8px}
-    /* responsive */
-    @media (max-width:880px){.grid{grid-template-columns:1fr;}.top-right{display:none}}
-    /* Arabic support: right-to-left container */
-    .rtl{direction:rtl;font-family:Cairo, "Segoe UI", system-ui;}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:880px){.grid{grid-template-columns:1fr}.top-right{display:none}}
+    .rtl{direction:rtl;font-family:Cairo, "Segoe UI", system-ui}
   </style>
+
   <!-- html2canvas CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa5Z8d1iQ4d8t2m1o1pTz0v3Gk6YpK8sK2u0Yb7JH1q2sKp6z9R6p+Yq1K6bY7fJ1q8c2m2P3k5L4Jz8Yxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
   <div class="wrap" role="main">
@@ -60,23 +50,22 @@
       </div>
 
       <div style="display:flex;gap:8px;align-items:center">
-        <div style="width:120px">
-          <label for="ui-lang" class="muted" id="lbl-ui-lang">Langue interface</label>
+        <div style="width:140px">
+          <label id="lbl-ui-lang">Langue interface</label>
           <select id="ui-lang" aria-label="Langue interface">
-            <option value="fr">FR (Français)</option>
-            <option value="en">EN (English)</option>
-            <option value="ar">AR (العربية)</option>
+            <option value="fr">FR</option>
+            <option value="en">EN</option>
+            <option value="ar">AR</option>
           </select>
         </div>
-        <div class="top-right muted" id="version-badge">v16 · Premium Gold</div>
+        <div class="top-right muted" id="version-badge">vFinal · Premium Gold</div>
       </div>
     </header>
 
     <section class="grid" aria-label="Contrôles et aperçu">
-      <!-- Left panel: controls -->
       <div class="panel" id="controls">
         <div style="margin-bottom:10px">
-          <label for="sign" id="lbl-sign">Choisir un signe</label>
+          <label id="lbl-sign">Choisir un signe</label>
           <select id="sign" aria-label="Signe astrologique">
             <option value="aries">Bélier / Aries</option>
             <option value="taurus">Taureau / Taurus</option>
@@ -86,7 +75,7 @@
             <option value="virgo">Vierge / Virgo</option>
             <option value="libra">Balance / Libra</option>
             <option value="scorpio">Scorpion / Scorpio</option>
-            <option value="sagittarius">Sagittaire / Sagittarius</option>
+            <option value="sagittarius">Sagit. / Sagittarius</option>
             <option value="capricorn">Capricorne / Capricorn</option>
             <option value="aquarius">Verseau / Aquarius</option>
             <option value="pisces">Poissons / Pisces</option>
@@ -94,12 +83,12 @@
         </div>
 
         <div style="margin-bottom:10px">
-          <label for="meal" id="lbl-meal">Type de repas</label>
+          <label id="lbl-meal">Type de repas</label>
           <div class="row">
             <select id="meal" aria-label="Type de repas">
-              <option value="breakfast">Petit-déjeuner</option>
-              <option value="lunch">Déjeuner</option>
-              <option value="dinner">Dîner</option>
+              <option value="breakfast">Petit-déj / Breakfast</option>
+              <option value="lunch">Déjeuner / Lunch</option>
+              <option value="dinner">Dîner / Dinner</option>
             </select>
             <select id="lang-recipe" aria-label="Langue recette">
               <option value="fr">FR</option>
@@ -142,10 +131,8 @@
           <button id="export-png" class="btn-primary">⬇ Exporter carte PNG</button>
           <button id="export-png-high" class="btn-outline">⬆ PNG haute résolution</button>
         </div>
-
       </div>
 
-      <!-- Right panel: outputs -->
       <div>
         <div class="panel" style="margin-bottom:12px">
           <div style="display:flex;gap:12px;align-items:flex-start">
@@ -158,7 +145,6 @@
 
             <div style="width:320px">
               <label id="lbl-card-preview">Carte digitale (aperçu)</label>
-              <!-- this is the card container that will be exported by html2canvas -->
               <div id="card" class="card-preview" role="region" aria-label="Carte digitale preview">
                 <div id="card-inner" style="color:#fff">
                   <img id="card-image" class="card-image" src="" alt="Photo recette" />
@@ -173,7 +159,7 @@
                   </div>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:end;margin-top:8px">
-                  <small class="muted">v16 · Premium Gold</small>
+                  <small class="muted">vFinal · Premium Gold</small>
                   <button id="download-card" class="btn-outline" style="width:auto">⬇ Export (imprimer)</button>
                 </div>
               </div>
@@ -183,9 +169,7 @@
 
         <div class="panel">
           <label id="lbl-examples">Historique / Exemples africains</label>
-          <div id="examples" class="muted" style="min-height:110px;overflow:auto;padding:6px">
-            <!-- populated by JS -->
-          </div>
+          <div id="examples" class="muted" style="min-height:110px;overflow:auto;padding:6px"></div>
         </div>
       </div>
     </section>
@@ -196,631 +180,217 @@
   </div>
 
   <script>
-  /**************************************************************************
-   * Traductions UI (FR / EN / AR)
-   ***************************************************************************/
+  // ---------- UI TEXTS ----------
   const UI_TEXT = {
-    fr: {
-      title: "AstroFood — Premium Gold (Chef-AI)",
-      sub: "Recettes et cartes digitales par signe astrologique — FR / EN / AR",
-      lblUiLang: "Langue interface",
-      lblSign: "Choisir un signe",
-      lblMeal: "Type de repas",
-      btnGenerate: "🍳 Générer la recette",
-      btnOpenCard: "📇 Afficher la carte digitale",
-      lblChef: "Chef-AI Chat",
-      btnChefSend: "Envoyer",
-      lblContact: "QR / Contact",
-      lblQrHelp: "QR WhatsApp / site",
-      btnExport: "⬇ Exporter carte PNG",
-      btnExportHigh: "⬆ PNG haute résolution",
-      lblRecipeOutput: "Recette générée",
-      lblCardPreview: "Carte digitale (aperçu)",
-      lblExamples: "Historique / Exemples africains",
-      uiFooter: "AstroFood — Premium Gold · Connecte Chef-AI à /api/chef-ai pour réponses réelles."
-    },
-    en: {
-      title: "AstroFood — Premium Gold (Chef-AI)",
-      sub: "Recipes and digital cards by zodiac sign — FR / EN / AR",
-      lblUiLang: "Interface language",
-      lblSign: "Choose a sign",
-      lblMeal: "Meal type",
-      btnGenerate: "🍳 Generate recipe",
-      btnOpenCard: "📇 Show digital card",
-      lblChef: "Chef-AI Chat",
-      btnChefSend: "Send",
-      lblContact: "QR / Contact",
-      lblQrHelp: "WhatsApp QR / site",
-      btnExport: "⬇ Export card PNG",
-      btnExportHigh: "⬆ High-res PNG",
-      lblRecipeOutput: "Generated recipe",
-      lblCardPreview: "Digital card (preview)",
-      lblExamples: "History / African examples",
-      uiFooter: "AstroFood — Premium Gold · Connect Chef-AI to /api/chef-ai for real answers."
-    },
-    ar: {
-      title: "أستروفود — النسخة الذهبية (Chef-AI)",
-      sub: "وصفات وبطاقات رقمية حسب البرج — FR / EN / AR",
-      lblUiLang: "لغة الواجهة",
-      lblSign: "اختر البرج",
-      lblMeal: "نوع الوجبة",
-      btnGenerate: "🍳 انشئ الوصفة",
-      btnOpenCard: "📇 عرض البطاقة الرقمية",
-      lblChef: "شيف-آي شات",
-      btnChefSend: "إرسال",
-      lblContact: "رمز الاستجابة السريعة / تواصل",
-      lblQrHelp: "QR واتساب / الموقع",
-      btnExport: "⬇ تصدير البطاقة PNG",
-      btnExportHigh: "⬆ PNG جودة عالية",
-      lblRecipeOutput: "الوصفة المولدة",
-      lblCardPreview: "البطاقة الرقمية (معاينة)",
-      lblExamples: "أمثلة إفريقية",
-      uiFooter: "أستروفود — النسخة الذهبية · اربط Chef-AI بنقطة /api/chef-ai للردود الحقيقية."
-    }
+    fr:{ title:"AstroFood — Premium Gold (Chef-AI)", sub:"Recettes et cartes digitales — FR/EN/AR",
+         lblUiLang:"Langue interface", lblSign:"Choisir un signe", lblMeal:"Type de repas",
+         btnGenerate:"🍳 Générer la recette", btnOpenCard:"📇 Afficher la carte digitale",
+         lblChef:"Chef-AI Chat", btnChefSend:"Envoyer", lblContact:"QR / Contact", lblQrHelp:"QR WhatsApp / site",
+         btnExport:"⬇ Exporter carte PNG", btnExportHigh:"⬆ PNG haute résolution",
+         lblRecipeOutput:"Recette générée", lblCardPreview:"Carte digitale (aperçu)", lblExamples:"Exemples africains",
+         uiFooter:"AstroFood — Premium Gold · Connecte Chef-AI à /api/chef-ai pour réponses réelles." },
+    en:{ title:"AstroFood — Premium Gold (Chef-AI)", sub:"Recipes and digital cards — FR/EN/AR",
+         lblUiLang:"Interface language", lblSign:"Choose a sign", lblMeal:"Meal type",
+         btnGenerate:"🍳 Generate recipe", btnOpenCard:"📇 Show digital card",
+         lblChef:"Chef-AI Chat", btnChefSend:"Send", lblContact:"QR / Contact", lblQrHelp:"WhatsApp QR / site",
+         btnExport:"⬇ Export card PNG", btnExportHigh:"⬆ High-res PNG",
+         lblRecipeOutput:"Generated recipe", lblCardPreview:"Digital card (preview)", lblExamples:"African examples",
+         uiFooter:"AstroFood — Premium Gold · Connect Chef-AI to /api/chef-ai for real answers." },
+    ar:{ title:"أستروفود — النسخة الذهبية (Chef-AI)", sub:"وصفات وبطاقات رقمية — FR/EN/AR",
+         lblUiLang:"لغة الواجهة", lblSign:"اختر البرج", lblMeal:"نوع الوجبة",
+         btnGenerate:"🍳 انشئ الوصفة", btnOpenCard:"📇 عرض البطاقة الرقمية",
+         lblChef:"شيف-آي شات", btnChefSend:"إرسال", lblContact:"رمز الاستجابة السريعة / تواصل", lblQrHelp:"QR واتساب / الموقع",
+         btnExport:"⬇ تصدير البطاقة PNG", btnExportHigh:"⬆ PNG جودة عالية",
+         lblRecipeOutput:"الوصفة المولدة", lblCardPreview:"البطاقة الرقمية (معاينة)", lblExamples:"أمثلة إفريقية",
+         uiFooter:"أستروفود — النسخة الذهبية · اربط Chef-AI بنقطة /api/chef-ai للردود الحقيقية." }
   };
 
-  /**************************************************************************
-   * Sample recipe data (extended to include ingredients, steps, cook time,
-   * calories and a sample image). You can replace images by your own URLs.
-   ***************************************************************************/
+  // ---------- SAMPLE RECIPES (fallback local) ----------
   const SAMPLE_RECIPES = {
     fr: {
       breakfast: [
-        { title: "Bowl énergie (africain)", desc: "Bouillie de fonio, banane, miel local, graines de sésame.",
-          ingredients: ["Fonio 100g", "1 banane", "1 c.à soupe miel", "1 c.à soupe graines de sésame"],
-          preparation: "Cuire le fonio 10 min dans l'eau. Écraser la banane, mélanger, ajouter miel et graines.",
-          cook: "Cuisson: 10 min (mijoter)",
-          calories: "≈350 kcal",
-          imgSeed: "fonio-bowl"
-        },
-        { title: "Toast avocat sénégalais", desc: "Pain complet, avocat écrasé, tomates, zeste de citron.",
-          ingredients: ["Pain complet 2 tranches", "1 avocat", "1 tomate", "Citron"],
-          preparation: "Griller le pain, écraser l'avocat, disposer tomate et zeste.",
-          cook: "Pas de cuisson (grillage 3 min)",
-          calories: "≈420 kcal",
-          imgSeed: "toast-avocado"
-        }
+        { title:"Bowl énergie (africain)", desc:"Bouillie de fonio, banane, miel local, graines de sésame.",
+          ingredients:["Fonio 100g","1 banane","1 c.à soupe miel","1 c.à soupe graines de sésame"],
+          preparation:"Cuire le fonio 10 min. Mélanger avec la banane, le miel et les graines.",
+          cook:"Cuisson: 10 min", calories:"≈350 kcal", imgSeed:"fonio-bowl" }
       ],
       lunch: [
-        { title: "Yassa végétarien léger", desc: "Oignons caramélisés, citron, servi avec riz complet et légumes grillés.",
-          ingredients: ["Oignons 2", "Citron", "Riz complet 150g", "Légumes grillés"],
-          preparation: "Caraméliser les oignons, ajouter citron, cuire riz, servir avec légumes.",
-          cook: "Cuisson: 25-30 min",
-          calories: "≈520 kcal",
-          imgSeed: "yassa-veg"
-        }
+        { title:"Yassa végétarien léger", desc:"Oignons caramélisés, citron, riz complet.",
+          ingredients:["Oignons 2","Citron","Riz complet 150g","Légumes grillés"],
+          preparation:"Caraméliser les oignons, ajouter citron, cuire riz, servir.",
+          cook:"Cuisson: 25-30 min", calories:"≈520 kcal", imgSeed:"yassa-veg" }
       ],
       dinner: [
-        { title: "Soupe douce de patate", desc: "Patate douce, gingembre, lait de coco.",
-          ingredients: ["Patate douce 300g", "1 c.à café gingembre", "200ml lait de coco"],
-          preparation: "Cuire patate douce 20min, mixer avec lait de coco et gingembre.",
-          cook: "Cuisson: 20 min",
-          calories: "≈300 kcal",
-          imgSeed: "sweetpotato-soup"
-        }
+        { title:"Soupe douce de patate", desc:"Patate douce, gingembre, lait de coco.",
+          ingredients:["Patate douce 300g","1 c.à café gingembre","200ml lait de coco"],
+          preparation:"Cuire 20 min, mixer, servir chaud.",
+          cook:"Cuisson: 20 min", calories:"≈300 kcal", imgSeed:"sweetpotato-soup" }
       ]
     },
-    en: {
-      breakfast: [
-        { title: "Energy Fonio Bowl", desc: "Fonio porridge with banana and honey.",
-          ingredients:["Fonio 100g","1 banana","1 tbsp honey","Sesame seeds"],
-          preparation: "Cook fonio 10 min, mash banana, mix with honey and seeds.",
-          cook: "Cook: 10 min",
-          calories: "≈350 kcal",
-          imgSeed: "fonio-bowl"
-        }
-      ],
-      lunch: [
-        { title: "Light Yassa", desc: "Caramelized onions, lemon, with rice and grilled veg.",
-          ingredients:["2 onions","Lemon","Rice 150g","Grilled vegetables"],
-          preparation: "Caramelize onions, add lemon, cook rice, serve with veg.",
-          cook: "Cook: 25-30 min",
-          calories: "≈520 kcal",
-          imgSeed: "yassa-veg"
-        }
-      ],
-      dinner: [
-        { title: "Sweet Potato Soup", desc: "Ginger, coconut milk, 20 min.",
-          ingredients:["Sweet potato 300g","Ginger 1 tsp","200ml coconut milk"],
-          preparation: "Boil sweet potato 20min, blend with coconut milk and ginger.",
-          cook: "Cook: 20 min",
-          calories: "≈300 kcal",
-          imgSeed: "sweetpotato-soup"
-        }
-      ]
-    },
-    ar: {
-      breakfast: [
-        { title: "وجبة إفطار محلية", desc: "بوّلية فونيو مع موز وعسل.",
-          ingredients:["فونيو 100غ","موز 1","ملعقة عسل","بذور سمسم"],
-          preparation: "سلق الفونيو 10 دقائق، هرس الموز، الخلط مع العسل.",
-          cook: "الطهي: 10 دقائق",
-          calories: "≈350 سعرة",
-          imgSeed: "fonio-bowl"
-        }
-      ],
-      lunch: [
-        { title: "ياسا نباتي خفيف", desc: "بصل مكرمل، ليمون، مع أرز وخضار مشوية.",
-          ingredients:["بصلتين","ليمون","أرز 150غ","خضار مشوية"],
-          preparation: "كرمل البصل، أضف الليمون، اطهُ الأرز، قدّم مع الخضار.",
-          cook: "الطهي: 25-30 دقيقة",
-          calories: "≈520 سعرة",
-          imgSeed: "yassa-veg"
-        }
-      ],
-      dinner: [
-        { title: "شوربة البطاطا الحلوة", desc: "زنجبيل وحليب جوز الهند.",
-          ingredients:["بطاطا حلوة 300غ","زنجبيل 1 ملعقة","200 مل حليب جوز الهند"],
-          preparation: "اسلق البطاطا 20 دقيقة، اهرس وامزج بحليب جوز الهند.",
-          cook: "الطهي: 20 دقيقة",
-          calories: "≈300 سعرة",
-          imgSeed: "sweetpotato-soup"
-        }
-      ]
-    }
+    en: { /* similar */ breakfast: SAMPLE_RECIPES?.fr?.breakfast || [], lunch: SAMPLE_RECIPES?.fr?.lunch || [], dinner: SAMPLE_RECIPES?.fr?.dinner || [] },
+    ar: { breakfast: SAMPLE_RECIPES?.fr?.breakfast || [], lunch: SAMPLE_RECIPES?.fr?.lunch || [], dinner: SAMPLE_RECIPES?.fr?.dinner || [] }
   };
 
-  // small sign tweak words (for title flavor)
-  const SIGN_TWEAKS = {
-    aries: {fr:"épicé", en:"spicy", ar:"حار"},
-    taurus: {fr:"confort", en:"comfort", ar:"مريح"},
-    gemini: {fr:"léger", en:"light", ar:"خفيف"},
-    cancer: {fr:"réconfortant", en:"comforting", ar:"مريح"},
-    leo: {fr:"festif", en:"festive", ar:"احتفالي"},
-    virgo: {fr:"équilibré", en:"balanced", ar:"متوازن"},
-    libra: {fr:"harmonieux", en:"harmonious", ar:"متناغم"},
-    scorpio: {fr:"intense", en:"intense", ar:"عنيد"},
-    sagittarius: {fr:"explorateur", en:"explorer", ar:"مستكشف"},
-    capricorn: {fr:"structuré", en:"structured", ar:"منظم"},
-    aquarius: {fr:"créatif", en:"creative", ar:"مبدع"},
-    pisces: {fr:"doux", en:"gentle", ar:"لطيف"}
-  };
+  // ---------- HELPERS & DOM ----------
+  function elt(q){return document.querySelector(q)}
+  const uiLangEl = elt('#ui-lang'), signEl = elt('#sign'), mealEl = elt('#meal'), langRecipeEl = elt('#lang-recipe');
+  const btnGenerate = elt('#btn-generate'), recipeOut = elt('#recipe'), cardImage = elt('#card-image'), cardTitle = elt('#card-title');
+  const cardIngredients = elt('#card-ingredients'), cardPrep = elt('#card-prep'), cardCook = elt('#card-cook'), cardCals = elt('#card-cals');
+  const openCardBtn = elt('#open-digital-card'), downloadCardBtn = elt('#download-card'), qrImg = elt('#qr-img'), contactNumber = elt('#contact-number');
+  const exportPngBtn = elt('#export-png'), exportPngHighBtn = elt('#export-png-high'), chefQuery = elt('#chef-query'), chefSend = elt('#chef-send'), chefResp = elt('#chef-response');
+  const examplesEl = elt('#examples');
 
-  // helpers to select image: using picsum.photos with seed
-  function imageFor(seed, w=800, h=600){
-    // generate a deterministic seed string
-    const s = encodeURIComponent(seed || 'astrofood');
-    return `https://picsum.photos/seed/${s}/${w}/${h}`;
-  }
-
-  /**************************************************************************
-   * DOM refs
-   ***************************************************************************/
-  const uiLangEl = document.getElementById('ui-lang');
-  const signEl = document.getElementById('sign');
-  const mealEl = document.getElementById('meal');
-  const langRecipeEl = document.getElementById('lang-recipe');
-  const btnGenerate = document.getElementById('btn-generate');
-  const recipeOut = document.getElementById('recipe');
-  const cardInner = document.getElementById('card-inner');
-  const cardImage = document.getElementById('card-image');
-  const cardTitle = document.getElementById('card-title');
-  const cardIngredients = document.getElementById('card-ingredients');
-  const cardPrep = document.getElementById('card-prep');
-  const cardCook = document.getElementById('card-cook');
-  const cardCals = document.getElementById('card-cals');
-  const openCardBtn = document.getElementById('open-digital-card');
-  const downloadCardBtn = document.getElementById('download-card');
-  const qrImg = document.getElementById('qr-img');
-  const contactNumber = document.getElementById('contact-number');
-  const exportPngBtn = document.getElementById('export-png');
-  const exportPngHighBtn = document.getElementById('export-png-high');
-  const chefQuery = document.getElementById('chef-query');
-  const chefSend = document.getElementById('chef-send');
-  const chefResp = document.getElementById('chef-response');
-  const examplesEl = document.getElementById('examples');
-
-  // UI label nodes to update on language change
   const uiNodes = {
-    title: document.getElementById('ui-title'),
-    sub: document.getElementById('ui-sub'),
-    lblUiLang: document.getElementById('lbl-ui-lang'),
-    lblSign: document.getElementById('lbl-sign'),
-    lblMeal: document.getElementById('lbl-meal'),
-    btnGenerate: document.getElementById('btn-generate'),
-    btnOpenCard: document.getElementById('open-digital-card'),
-    lblChef: document.getElementById('lbl-chef'),
-    btnChefSend: document.getElementById('chef-send'),
-    lblContact: document.getElementById('lbl-contact'),
-    lblQrHelp: document.getElementById('lbl-qr-help'),
-    btnExport: document.getElementById('export-png'),
-    btnExportHigh: document.getElementById('export-png-high'),
-    lblRecipeOutput: document.getElementById('lbl-recipe-output'),
-    lblCardPreview: document.getElementById('lbl-card-preview'),
-    lblExamples: document.getElementById('lbl-examples'),
-    uiFooter: document.getElementById('ui-footer')
+    title: elt('#ui-title'), sub: elt('#ui-sub'), lblUiLang: elt('#lbl-ui-lang'),
+    lblSign: elt('#lbl-sign'), lblMeal: elt('#lbl-meal'), btnGenerate: elt('#btn-generate'),
+    btnOpenCard: elt('#open-digital-card'), lblChef: elt('#lbl-chef'), btnChefSend: elt('#chef-send'),
+    lblContact: elt('#lbl-contact'), lblQrHelp: elt('#lbl-qr-help'), btnExport: elt('#export-png'),
+    btnExportHigh: elt('#export-png-high'), lblRecipeOutput: elt('#lbl-recipe-output'),
+    lblCardPreview: elt('#lbl-card-preview'), lblExamples: elt('#lbl-examples'), uiFooter: elt('#ui-footer')
   };
 
-  // initialize UI language (default fr)
+  // set UI language
   function setUiLanguage(lang){
     const t = UI_TEXT[lang] || UI_TEXT.fr;
-    uiNodes.title.textContent = t.title;
-    uiNodes.sub.textContent = t.sub;
-    uiNodes.lblUiLang.textContent = t.lblUiLang;
-    uiNodes.lblSign.textContent = t.lblSign;
-    uiNodes.lblMeal.textContent = t.lblMeal;
-    uiNodes.btnGenerate.textContent = t.btnGenerate;
-    uiNodes.btnOpenCard.textContent = t.btnOpenCard;
-    uiNodes.lblChef.textContent = t.lblChef;
-    uiNodes.btnChefSend.textContent = t.btnChefSend;
-    uiNodes.lblContact.textContent = t.lblContact;
-    uiNodes.lblQrHelp.textContent = t.lblQrHelp;
-    uiNodes.btnExport.textContent = t.btnExport;
-    uiNodes.btnExportHigh.textContent = t.btnExportHigh;
-    uiNodes.lblRecipeOutput.textContent = t.lblRecipeOutput;
-    uiNodes.lblCardPreview.textContent = t.lblCardPreview;
-    uiNodes.lblExamples.textContent = t.lblExamples;
-    uiNodes.uiFooter.textContent = t.uiFooter;
-
-    // RTL handling for Arabic
-    if(lang === 'ar'){
-      document.documentElement.dir = 'rtl';
-      document.body.classList.add('rtl');
-    } else {
-      document.documentElement.dir = 'ltr';
-      document.body.classList.remove('rtl');
-    }
+    uiNodes.title.textContent = t.title; uiNodes.sub.textContent = t.sub;
+    uiNodes.lblUiLang.textContent = t.lblUiLang; uiNodes.lblSign.textContent = t.lblSign; uiNodes.lblMeal.textContent = t.lblMeal;
+    uiNodes.btnGenerate.textContent = t.btnGenerate; uiNodes.btnOpenCard.textContent = t.btnOpenCard; uiNodes.lblChef.textContent = t.lblChef;
+    uiNodes.btnChefSend.textContent = t.btnChefSend; uiNodes.lblContact.textContent = t.lblContact; uiNodes.lblQrHelp.textContent = t.lblQrHelp;
+    uiNodes.btnExport.textContent = t.btnExport; uiNodes.btnExportHigh.textContent = t.btnExportHigh;
+    uiNodes.lblRecipeOutput.textContent = t.lblRecipeOutput; uiNodes.lblCardPreview.textContent = t.lblCardPreview;
+    uiNodes.lblExamples.textContent = t.lblExamples; uiNodes.uiFooter.textContent = t.uiFooter;
+    if(lang==='ar'){document.documentElement.dir='rtl'; document.body.classList.add('rtl')} else {document.documentElement.dir='ltr'; document.body.classList.remove('rtl')}
   }
-  // set default
   setUiLanguage(uiLangEl.value);
+  uiLangEl.addEventListener('change', ()=> setUiLanguage(uiLangEl.value));
 
-  uiLangEl.addEventListener('change', (e) => {
-    setUiLanguage(e.target.value);
-  });
+  // QR
+  function updateQR(){ const num = (contactNumber.value||'+221786599051').trim().replace(/\D/g,''); const wa = encodeURIComponent('https://wa.me/'+num); qrImg.src='https://chart.googleapis.com/chart?cht=qr&chs=180x180&chl='+wa; qrImg.alt='QR '+num}
+  contactNumber.addEventListener('input', updateQR); updateQR();
 
-  /**************************************************************************
-   * QR generator (Google Chart)
-   ***************************************************************************/
-  function updateQR(){
-    const num = (contactNumber.value || '+221786599051').trim().replace(/\D/g,'');
-    const waLink = encodeURIComponent('https://wa.me/' + num);
-    qrImg.src = 'https://chart.googleapis.com/chart?cht=qr&chs=180x180&chl=' + waLink;
-    qrImg.alt = 'QR WhatsApp ' + num;
-  }
-  contactNumber.addEventListener('input', updateQR);
-  updateQR();
-
-  /**************************************************************************
-   * Populate examples UI
-   ***************************************************************************/
-  function populateExamples(){
-    const lines = [];
-    lines.push('<strong>Recettes africaines — exemples rapides :</strong>');
-    (SAMPLE_RECIPES.fr.breakfast).forEach(r => {
-      lines.push(`<div style="margin-top:8px"><b>${r.title}</b><div style="font-size:13px;color:#cbd5e1">${r.desc}</div></div>`);
-    });
-    examplesEl.innerHTML = lines.join('');
-  }
+  // examples
+  function populateExamples(){ const lines=[]; lines.push('<strong>Recettes exemples :</strong>'); (SAMPLE_RECIPES.fr.breakfast || []).forEach(r=> lines.push(`<div style="margin-top:8px"><b>${r.title}</b><div style="font-size:13px;color:#cbd5e1">${r.desc}</div></div>`)); examplesEl.innerHTML = lines.join('') }
   populateExamples();
 
-  /**************************************************************************
-   * Generate a recipe locally (fallback). Produces full fields:
-   * title, desc, ingredients[], preparation, cook, calories, img
-   ***************************************************************************/
-  function pickRecipe({lang, meal, sign}){
-    const bucket = (SAMPLE_RECIPES[lang] && SAMPLE_RECIPES[lang][meal]) ? SAMPLE_RECIPES[lang][meal] : SAMPLE_RECIPES.fr.breakfast;
-    // pick deterministic index based on sign string
-    const idx = (Array.from(sign).reduce((s,c)=>s + c.charCodeAt(0),0)) % bucket.length;
-    const base = bucket[idx];
-    // tweak title with sign flavor
-    const tweak = SIGN_TWEAKS[sign] ? (SIGN_TWEAKS[sign][lang] || SIGN_TWEAKS[sign].fr) : '';
-    const title = `${base.title} ${tweak ? '— ' + tweak : ''}`;
-    const imgUrl = imageFor((base.imgSeed || base.title) + '-' + sign + '-' + meal, 800, 500);
+  // image util
+  function imageFor(seed,w=800,h=500){ const s = encodeURIComponent(seed||'astrofood'); return `https://picsum.photos/seed/${s}/${w}/${h}` }
+
+  // pick local fallback
+  function pickRecipeLocal({lang,meal,sign}){
+    const bucket=(SAMPLE_RECIPES[lang]&&SAMPLE_RECIPES[lang][meal])?SAMPLE_RECIPES[lang][meal]:SAMPLE_RECIPES.fr.breakfast;
+    const idx=(Array.from(sign).reduce((s,c)=>s+c.charCodeAt(0),0))%bucket.length;
+    const base=bucket[idx];
+    const title = `${base.title}`;
     return {
-      title,
-      desc: base.desc,
-      ingredients: base.ingredients || [],
-      preparation: base.preparation || '',
-      cook: base.cook || '',
-      calories: base.calories || '',
-      img: imgUrl
+      title, desc: base.desc, ingredients: base.ingredients||[], preparation: base.preparation||'', cook: base.cook||'', calories: base.calories||'', img:imageFor(base.imgSeed||base.title+sign+meal)
     };
   }
 
-  /**************************************************************************
-   * Render recipe into the recipe panel and update the card preview
-   ***************************************************************************/
+  // render recipe UI + sync card
   function renderRecipeToUI(recipe, uiLang='fr'){
-    // recipe may contain arabic text; handle rtl if uiLang == 'ar'
-    const isAr = uiLang === 'ar';
-    let html = '';
+    const isAr = uiLang==='ar';
+    let html='';
     if(isAr){
-      html += `<div class="rtl" style="font-family:Cairo, sans-serif">`;
-      html += `<div style="font-weight:700;font-size:15px;margin-bottom:8px">${escapeHtml(recipe.title)}</div>`;
-      html += `<div style="font-size:14px;margin-bottom:8px">${escapeHtml(recipe.desc)}</div>`;
-      html += `<div style="font-weight:600;margin-top:6px">${escapeHtml('المكونات / Ingredients')}:</div>`;
-      html += `<ul style="padding-left:18px">` + recipe.ingredients.map(i=>`<li style="margin-bottom:6px">${escapeHtml(i)}</li>`).join('') + `</ul>`;
-      html += `<div style="font-weight:600;margin-top:6px">${escapeHtml('طريقة التحضير / Preparation')}:</div>`;
-      html += `<div style="margin-top:6px">${escapeHtml(recipe.preparation)}</div>`;
-      html += `<div style="margin-top:8px">${escapeHtml(recipe.cook)} · ${escapeHtml(recipe.calories)}</div>`;
-      html += `</div>`;
+      html+=`<div class="rtl" style="font-family:Cairo, sans-serif">`;
+      html+=`<div style="font-weight:700;font-size:15px;margin-bottom:8px">${escapeHtml(recipe.title)}</div>`;
+      html+=`<div style="font-size:14px;margin-bottom:8px">${escapeHtml(recipe.desc)}</div>`;
+      html+=`<div style="font-weight:600;margin-top:6px">المكونات:</div>`;
+      html+=`<ul style="padding-left:18px">`+recipe.ingredients.map(i=>`<li style="margin-bottom:6px">${escapeHtml(i)}</li>`).join('')+`</ul>`;
+      html+=`<div style="font-weight:600;margin-top:6px">طريقة التحضير:</div><div style="margin-top:6px">${escapeHtml(recipe.preparation)}</div>`;
+      html+=`<div style="margin-top:8px">${escapeHtml(recipe.cook)} · ${escapeHtml(recipe.calories)}</div>`;
+      html+=`</div>`;
     } else {
-      html += `<div>`;
-      html += `<div style="font-weight:700;font-size:15px;margin-bottom:8px">${escapeHtml(recipe.title)}</div>`;
-      html += `<div style="font-size:14px;margin-bottom:8px">${escapeHtml(recipe.desc)}</div>`;
-      html += `<div style="font-weight:600;margin-top:6px">Ingrédients:</div>`;
-      html += `<ul style="padding-left:18px">` + recipe.ingredients.map(i=>`<li style="margin-bottom:6px">${escapeHtml(i)}</li>`).join('') + `</ul>`;
-      html += `<div style="font-weight:600;margin-top:6px">Préparation:</div>`;
-      html += `<div style="margin-top:6px">${escapeHtml(recipe.preparation)}</div>`;
-      html += `<div style="margin-top:8px">${escapeHtml(recipe.cook)} · ${escapeHtml(recipe.calories)}</div>`;
-      html += `</div>`;
+      html+=`<div>`;
+      html+=`<div style="font-weight:700;font-size:15px;margin-bottom:8px">${escapeHtml(recipe.title)}</div>`;
+      html+=`<div style="font-size:14px;margin-bottom:8px">${escapeHtml(recipe.desc)}</div>`;
+      html+=`<div style="font-weight:600;margin-top:6px">Ingrédients:</div>`;
+      html+=`<ul style="padding-left:18px">`+recipe.ingredients.map(i=>`<li style="margin-bottom:6px">${escapeHtml(i)}</li>`).join('')+`</ul>`;
+      html+=`<div style="font-weight:600;margin-top:6px">Préparation:</div><div style="margin-top:6px">${escapeHtml(recipe.preparation)}</div>`;
+      html+=`<div style="margin-top:8px">${escapeHtml(recipe.cook)} · ${escapeHtml(recipe.calories)}</div>`;
+      html+=`</div>`;
     }
     recipeOut.innerHTML = html;
-
-    // update card: image + fields
-    cardImage.src = recipe.img;
+    cardImage.src = recipe.img || imageFor(recipe.title);
     cardImage.alt = recipe.title;
     cardTitle.textContent = recipe.title;
-    cardIngredients.innerHTML = `<strong>${uiLang === 'ar' ? 'المكونات' : 'Ingrédients'}:</strong> ${escapeHtml(recipe.ingredients.join(', '))}`;
-    cardPrep.innerHTML = `<strong>${uiLang === 'ar' ? 'طريقة التحضير' : 'Préparation'}:</strong> ${escapeHtml(recipe.preparation)}`;
-    cardCook.textContent = recipe.cook;
-    cardCals.textContent = recipe.calories;
+    cardIngredients.innerHTML = `<strong>${uiLang==='ar'?'المكونات':'Ingrédients'}:</strong> ${escapeHtml((recipe.ingredients||[]).join(', '))}`;
+    cardPrep.innerHTML = `<strong>${uiLang==='ar'?'طريقة التحضير':'Préparation'}:</strong> ${escapeHtml(recipe.preparation)}`;
+    cardCook.textContent = recipe.cook || '--';
+    cardCals.textContent = recipe.calories || '--';
   }
 
-  // small helpers
-  function escapeHtml(s){ return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function elementOf(sign){
-    const elements = { aries:'fire', leo:'fire', sagittarius:'fire', taurus:'earth', virgo:'earth', capricorn:'earth', gemini:'air', libra:'air', aquarius:'air', cancer:'water', scorpio:'water', pisces:'water' };
-    return elements[sign] || 'neutral';
-  }
+  function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
 
-  /**************************************************************************
-   * Generate button
-   ***************************************************************************/
-  btnGenerate.addEventListener('click', async () => {
-    btnGenerate.disabled = true;
-    btnGenerate.textContent = UI_TEXT[uiLangEl.value].btnGenerate.replace('🍳','🍳 Génération…');
+  // generate local fallback or call server optionally
+  btnGenerate.addEventListener('click', async ()=>{
+    btnGenerate.disabled=true; btnGenerate.textContent = UI_TEXT[uiLangEl.value].btnGenerate.replace('🍳','🍳 Génération…');
     try {
-      // local generation
-      const recipe = pickRecipe({ lang: langRecipeEl.value, meal: mealEl.value, sign: signEl.value });
-      // slight simulated delay
-      await new Promise(r => setTimeout(r, 400));
+      // local fallback generation
+      const recipe = pickRecipeLocal({ lang: langRecipeEl.value, meal: mealEl.value, sign: signEl.value });
+      await new Promise(r => setTimeout(r, 300));
       renderRecipeToUI(recipe, uiLangEl.value);
     } catch(err){
-      recipeOut.innerHTML = `<div class="muted">Erreur lors de la génération.</div>`;
-      console.error(err);
+      recipeOut.innerHTML = `<div class="muted">Erreur lors de la génération.</div>`; console.error(err);
     } finally {
-      btnGenerate.disabled = false;
-      btnGenerate.textContent = UI_TEXT[uiLangEl.value].btnGenerate;
+      btnGenerate.disabled=false; btnGenerate.textContent = UI_TEXT[uiLangEl.value].btnGenerate;
     }
   });
 
-  /**************************************************************************
-   * Open printable card (new window)
-   ***************************************************************************/
-  openCardBtn.addEventListener('click', () => {
-    const cardHtml = `
-      <html><head><meta charset="utf-8"/><title>Carte AstroFood</title>
-      <style>body{margin:20px;font-family:Inter, Arial;background:#081025;color:#fff} .wrap{background:linear-gradient(90deg,#061026 0%,#03101a 100%);padding:20px;border-radius:12px;max-width:600px}</style>
-      </head><body>
-      <div class="wrap">${document.getElementById('card').innerHTML}</div>
-      </body></html>`;
-    const w = window.open('', '_blank');
-    if(w){
-      w.document.open();
-      w.document.write(cardHtml);
-      w.document.close();
-    } else {
-      alert('Popup bloquée — autorise les popups pour voir la carte.');
-    }
+  // printable card
+  openCardBtn.addEventListener('click', ()=>{
+    const cardHtml = `<html><head><meta charset="utf-8"/><title>Carte AstroFood</title><style>body{margin:20px;font-family:Inter, Arial;background:#081025;color:#fff} .wrap{background:linear-gradient(90deg,#061026 0%,#03101a 100%);padding:20px;border-radius:12px;max-width:600px}</style></head><body><div class="wrap">${document.getElementById('card').innerHTML}</div></body></html>`;
+    const w = window.open('','_blank');
+    if(w){ w.document.open(); w.document.write(cardHtml); w.document.close(); } else alert('Popup bloquée — autorise les popups.');
   });
+  downloadCardBtn.addEventListener('click', ()=> openCardBtn.click());
 
-  // download card (print) reuses openCardBtn
-  downloadCardBtn.addEventListener('click', () => {
-    openCardBtn.click();
-  });
-
-  /**************************************************************************
-   * Export PNG using html2canvas
-   * - high res option scales canvas for better quality
-   ***************************************************************************/
-  async function exportCardPNG(scale = 1){
+  // export PNG with html2canvas
+  async function exportCardPNG(scale=1){
     const cardEl = document.getElementById('card');
-    // temporarily add white background for PNG if desired; we'll keep original look
-    const opts = { scale: scale, useCORS: true, backgroundColor: null, scrollY: -window.scrollY };
     try {
-      const canvas = await html2canvas(cardEl, opts);
+      const canvas = await html2canvas(cardEl, { scale: scale, useCORS:true, backgroundColor:null, scrollY:-window.scrollY });
       const dataUrl = canvas.toDataURL('image/png');
-      // download
-      const a = document.createElement('a');
-      a.href = dataUrl;
-      a.download = `${(cardTitle.textContent || 'astrofood-card').replace(/\s+/g,'_')}.png`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      const a = document.createElement('a'); a.href=dataUrl; a.download = `${(cardTitle.textContent||'astrofood-card').replace(/\s+/g,'_')}.png`; document.body.appendChild(a); a.click(); a.remove();
+    } catch(err){ console.error('html2canvas error', err); alert('Erreur export PNG: ' + (err.message||err)) }
+  }
+  exportPngBtn.addEventListener('click', async ()=>{
+    exportPngBtn.disabled=true; exportPngBtn.textContent = '⬇ Exporting…'; try{ await exportCardPNG(1) } finally{ exportPngBtn.disabled=false; exportPngBtn.textContent = UI_TEXT[uiLangEl.value].btnExport }
+  });
+  exportPngHighBtn.addEventListener('click', async ()=>{
+    exportPngHighBtn.disabled=true; exportPngHighBtn.textContent = '⬆ Exporting…'; try{ await exportCardPNG(2) } finally{ exportPngHighBtn.disabled=false; exportPngHighBtn.textContent = UI_TEXT[uiLangEl.value].btnExportHigh }
+  });
+
+  // Chef-AI client handler (calls /api/chef-ai)
+  chefSend.addEventListener('click', async ()=>{
+    const q = (chefQuery.value||'').trim();
+    if(!q){ chefResp.textContent = uiLangEl.value==='fr' ? 'Écris une question pour le Chef-AI.' : (uiLangEl.value==='en' ? 'Write a question for Chef-AI.' : 'اكتب سؤالاً للشيف.'); return; }
+    const CHEF_API_URL = '/api/chef-ai';
+    chefSend.disabled=true; chefResp.textContent = uiLangEl.value==='fr' ? 'Chef-AI réfléchit…' : (uiLangEl.value==='en' ? 'Chef-AI thinking…' : 'الشيف يفكر…');
+    const payload = { prompt:q, sign:signEl.value, meal:mealEl.value, lang:langRecipeEl.value };
+    const controller = new AbortController(); const TIMEOUT_MS=20000; const timeoutId = setTimeout(()=>controller.abort(), TIMEOUT_MS);
+    try {
+      const res = await fetch(CHEF_API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload), signal:controller.signal });
+      clearTimeout(timeoutId);
+      if(!res.ok){
+        let text=''; try{text=await res.text()}catch(_){}
+        chefResp.textContent = (uiLangEl.value==='fr' ? 'Erreur serveur: ' : (uiLangEl.value==='en' ? 'Server error: ' : 'خطأ في الخادم: ')) + `${res.status}${text ? ' — '+text : ''}`;
+        return;
+      }
+      let data; try{ data = await res.json() } catch(e){ chefResp.textContent = uiLangEl.value==='fr' ? 'Réponse invalide du serveur.' : (uiLangEl.value==='en' ? 'Invalid server response.' : 'استجابة خادم غير صالحة.'); return; }
+      if(data.answer) chefResp.textContent = data.answer; else chefResp.textContent = uiLangEl.value==='fr' ? 'Pas de réponse du Chef-AI.' : (uiLangEl.value==='en' ? 'No answer from Chef-AI.' : 'لا توجد إجابة من الشيف.');
+      if(data.recipe && typeof data.recipe==='object'){ const r = { title:data.recipe.title||'', desc:data.recipe.desc||'', ingredients:Array.isArray(data.recipe.ingredients)?data.recipe.ingredients:(data.recipe.ingredients? [String(data.recipe.ingredients)]:[]), preparation:data.recipe.preparation||'', cook:data.recipe.cook||'', calories:data.recipe.calories||'', img:data.recipe.img||'' }; if(r.img) try{ r.img = (new URL(r.img, window.location.href)).href }catch(_){ } renderRecipeToUI(r, uiLangEl.value); }
     } catch(err){
-      console.error('html2canvas error', err);
-      alert('Erreur export PNG: ' + (err && err.message ? err.message : 'unknown'));
-    }
-  }
-
-  exportPngBtn.addEventListener('click', async () => {
-    exportPngBtn.disabled = true;
-    exportPngBtn.textContent = UI_TEXT[uiLangEl.value].btnExport.replace('⬇','⬇ Exporting…');
-    try {
-      await exportCardPNG(1);
-    } finally {
-      exportPngBtn.disabled = false;
-      exportPngBtn.textContent = UI_TEXT[uiLangEl.value].btnExport;
-    }
+      if(err.name==='AbortError') chefResp.textContent = uiLangEl.value==='fr' ? 'Délai dépassé (timeout).' : (uiLangEl.value==='en' ? 'Request timed out.' : 'انتهت مهلة الطلب.');
+      else chefResp.textContent = (uiLangEl.value==='fr' ? 'Erreur Chef-AI: ' : (uiLangEl.value==='en' ? 'Chef-AI error: ' : 'خطأ الشيف: ')) + (err.message||err);
+      console.error('Chef-AI client error', err);
+    } finally { chefSend.disabled=false; clearTimeout(timeoutId); }
   });
 
-  exportPngHighBtn.addEventListener('click', async () => {
-    exportPngHighBtn.disabled = true;
-    exportPngHighBtn.textContent = UI_TEXT[uiLangEl.value].btnExportHigh.replace('⬆','⬆ Exporting…');
-    try {
-      // scale 2 for higher resolution
-      await exportCardPNG(2);
-    } finally {
-      exportPngHighBtn.disabled = false;
-      exportPngHighBtn.textContent = UI_TEXT[uiLangEl.value].btnExportHigh;
-    }
-  });
+  // ctrl/cmd+G shortcut
+  document.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='g' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); btnGenerate.click(); } });
 
-  /**************************************************************************
-   * Chef-AI placeholder behaviour (local demo)
-   * Replace the fetch with your endpoint to use real AI responses.
-   ***************************************************************************/
- // ---------------------------
-// Chef-AI: appel réel au backend (/api/chef-ai)
-// Remplace l'ancien chefSend.addEventListener(...) par ce bloc.
-// Variables attendues pré-existantes dans la page :
-// chefSend, chefResp, uiLangEl, signEl, mealEl, langRecipeEl, renderRecipeToUI
-// ---------------------------
-
-chefSend.addEventListener('click', async () => {
-  const q = (chefQuery.value || '').trim();
-  if (!q) {
-    chefResp.textContent = uiLangEl.value === 'fr' ? 'Écris une question pour le Chef-AI.' : (uiLangEl.value === 'en' ? 'Write a question for Chef-AI.' : 'اكتب سؤالاً للشيف.');
-    return;
-  }
-
-  // URL de ton endpoint (modifie si besoin)
-  const CHEF_API_URL = '/api/chef-ai';
-
-  // UI: disable while waiting
-  chefSend.disabled = true;
-  const waitingText = uiLangEl.value === 'fr' ? 'Chef-AI réfléchit…' : (uiLangEl.value === 'en' ? 'Chef-AI thinking…' : 'الشيف يفكر…');
-  chefResp.textContent = waitingText;
-
-  // Préparer payload
-  const payload = {
-    prompt: q,
-    sign: signEl.value,
-    meal: mealEl.value,
-    lang: langRecipeEl.value
-  };
-
-  // Timeout controller
-  const controller = new AbortController();
-  const TIMEOUT_MS = 20000; // 20s
-  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-  try {
-    const res = await fetch(CHEF_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!res.ok) {
-      // show server error message (try to read body)
-      let text = '';
-      try { text = await res.text(); } catch(_) { text = ''; }
-      chefResp.textContent = (uiLangEl.value === 'fr' ? 'Erreur serveur: ' : (uiLangEl.value === 'en' ? 'Server error: ' : 'خطأ في الخادم: ')) + `${res.status}${text ? ' — ' + text : ''}`;
-      return;
-    }
-
-    // parse JSON (defensive)
-    let data;
-    try {
-      data = await res.json();
-    } catch (e) {
-      const txt = await res.text().catch(()=>null);
-      chefResp.textContent = uiLangEl.value === 'fr' ? 'Réponse invalide du serveur.' : (uiLangEl.value === 'en' ? 'Invalid server response.' : 'استجابة خادم غير صالحة.');
-      console.warn('Invalid JSON from chef API:', txt || e);
-      return;
-    }
-
-    // Handle warnings or non-structured responses
-    if (data.warning === 'failed_to_parse_json' && data.answer) {
-      // server couldn't parse model JSON -> show the answer and leave recipe empty
-      chefResp.textContent = data.answer;
-      return;
-    }
-
-    // If answer present, show it
-    if (data.answer) {
-      chefResp.textContent = data.answer;
-    } else {
-      chefResp.textContent = uiLangEl.value === 'fr' ? 'Pas de réponse du Chef-AI.' : (uiLangEl.value === 'en' ? 'No answer from Chef-AI.' : 'لا توجد إجابة من الشيف.');
-    }
-
-    // If a structured recipe is provided, render it into the UI/card
-    if (data.recipe && typeof data.recipe === 'object') {
-      // Normaliser le format minimal attendu
-      const r = {
-        title: data.recipe.title || '',
-        desc: data.recipe.desc || '',
-        ingredients: Array.isArray(data.recipe.ingredients) ? data.recipe.ingredients : (data.recipe.ingredients ? [String(data.recipe.ingredients)] : []),
-        preparation: data.recipe.preparation || '',
-        cook: data.recipe.cook || '',
-        calories: data.recipe.calories || '',
-        img: data.recipe.img || ''
-      };
-
-      // Si l'API renvoie seulement une image relative ou un tag, on peut le remplacer/sanitiser ici
-      // Exemple: si img vide -> laisser la placeholder actuelle; sinon remplacer
-      if (r.img) {
-        // safe: si l'image fournie n'est pas une URL complète, on ignore (ou on pourrait préfixer)
-        try {
-          const u = new URL(r.img, window.location.href);
-          r.img = u.href;
-        } catch (_) {
-          // non-URL -> on laisse r.img tel quel (le renderRecipeToUI pourra gérer)
-        }
-      }
-
-      // Utilise la fonction existante pour afficher la recette
-      try {
-        renderRecipeToUI(r, uiLangEl.value);
-      } catch (err) {
-        console.warn('renderRecipeToUI failed', err);
-      }
-    }
-
-  } catch (err) {
-    // Timeout / network / abort
-    if (err.name === 'AbortError') {
-      chefResp.textContent = uiLangEl.value === 'fr' ? 'Délai dépassé (timeout).' : (uiLangEl.value === 'en' ? 'Request timed out.' : 'انتهت مهلة الطلب.');
-    } else {
-      chefResp.textContent = (uiLangEl.value === 'fr' ? 'Erreur Chef-AI: ' : (uiLangEl.value === 'en' ? 'Chef-AI error: ' : 'خطأ الشيف: ')) + (err.message || err);
-    }
-    console.error('Chef-AI client error', err);
-  } finally {
-    chefSend.disabled = false;
-    clearTimeout(timeoutId);
-  }
-});
-
-  /**************************************************************************
-   * Utility: escape and small idempotent init
-   ***************************************************************************/
-  (function idempotentInit(){
-    updateQR();
-  })();
-
-  // small accessibility: Ctrl/Cmd+G to generate
-  document.addEventListener('keydown', (e) => {
-    if(e.key.toLowerCase() === 'g' && (e.ctrlKey || e.metaKey)) {
-      e.preventDefault();
-      btnGenerate.click();
-    }
-  });
-
-  /**************************************************************************
-   * When user changes UI language, update UI texts (done above). Also ensure
-   * buttons reflect current UI language if previously changed.
-   ***************************************************************************/
-  uiLangEl.addEventListener('change', () => {
-    setUiLanguage(uiLangEl.value);
-    // update button text state (in case)
-    btnGenerate.textContent = UI_TEXT[uiLangEl.value].btnGenerate;
-    exportPngBtn.textContent = UI_TEXT[uiLangEl.value].btnExport;
-    exportPngHighBtn.textContent = UI_TEXT[uiLangEl.value].btnExportHigh;
-  });
-
-  /**************************************************************************
-   * Initial sample: generate once so user sees filled card
-   ***************************************************************************/
-  // auto-generate first recipe on load
-  (async function initialGenerate(){
-    const rec = pickRecipe({ lang: 'fr', meal: 'breakfast', sign: 'aries' });
-    renderRecipeToUI(rec, uiLangEl.value);
-  })();
+  // initial sample
+  (function initial(){ const rec = pickRecipeLocal({ lang:'fr', meal:'breakfast', sign:'aries' }); renderRecipeToUI(rec, uiLangEl.value); })();
 
   </script>
 </body>
